@@ -38,6 +38,7 @@ package com.kboctopus.fh
 		public function showScreen(id:int) : void
 		{
 			//temp
+			_currentScreen.destroy();
 			_currentScreen.visible = false;
 			
 			_currentScreen = _screenDic[id];

@@ -15,6 +15,7 @@ package
 	import starling.core.Starling;
 	import starling.events.Event;
 	
+	[SWF(width="480", height="800")]
 	public class FlyHigh extends Sprite
 	{
 		private var _myStarling:Starling;
@@ -41,9 +42,7 @@ package
 			ConstGame.GAME_H = 800;
 			
 			var iOS:Boolean = Capabilities.manufacturer.indexOf("iOS") != -1;
-			Starling.multitouchEnabled = true;  
 			Starling.handleLostContext = !iOS;  
-			Starling.handleLostContext = true;
 			Starling.multitouchEnabled = false;
 			
 			_start();

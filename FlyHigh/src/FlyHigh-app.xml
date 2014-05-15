@@ -15,7 +15,7 @@
 
 	<!-- A universally unique application identifier. Must be unique across all AIR applications.
 	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-	<id>FlyHigh</id>
+	<id>com.kboctopus.flyhigh</id>
 
 	<!-- Used as the filename for the application. Required. -->
 	<filename>FlyHigh</filename>
@@ -105,9 +105,10 @@
 
 		<!-- Whether or not to pan when a soft keyboard is raised or lowered (either "pan" or "none").  Optional.  Defaults "pan." -->
 		<!-- <softKeyboardBehavior></softKeyboardBehavior> -->
-	<autoOrients>true</autoOrients>
-        <fullScreen>false</fullScreen>
+		<autoOrients>false</autoOrients>
+        <renderMode>direct</renderMode>
         <visible>true</visible>
+    <fullScreen>false</fullScreen>
     </initialWindow>
 
 	<!-- We recommend omitting the supportedProfiles element, -->
@@ -249,6 +250,11 @@
 		together in order to use AIR's NetworkInfo APIs-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
 			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+			    
+			    <application >
+        				<activity android:name="com.kboctopus.sns.component.AuthActivity" >
+        				</activity>
+    			</application>
 			</manifest>
 			
 		]]></manifestAdditions>
@@ -263,4 +269,8 @@
 		]]></InfoAdditions>
         <requestedDisplayResolution>high</requestedDisplayResolution>
     </iPhone>
+
+<extensions>
+        <extensionID>com.kboctopus.sns.SnsExtension</extensionID>
+    </extensions>
 </application>
