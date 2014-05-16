@@ -3,8 +3,8 @@ package com.kboctopus.fh.screen
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
 	import com.kboctopus.fh.tools.AssetTool;
-	import com.kboctopus.sns.ServiceManager;
-	import com.kboctopus.sns.constant.ServiceType;
+//	import com.kboctopus.sns.ServiceManager;
+//	import com.kboctopus.sns.constant.ServiceType;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -33,8 +33,8 @@ package com.kboctopus.fh.screen
 			super(manager);
 			
 			/**初始化腾讯平台服务*/
-			ServiceManager.ins().initConfig(ServiceType.TENCENT, "", "801386256", "6fa520a3c9b35b3a1fc16f117ae7a9a0", "http://www.sharesdk.cn");
-			ServiceManager.ins().initConfig(ServiceType.SINA, "", "3912828254", "1c72050a8b871cb46a1759dc5c77fa63",  "https://api.weibo.com/oauth2/default.html");
+//			ServiceManager.ins().initConfig(ServiceType.TENCENT, "", "801386256", "6fa520a3c9b35b3a1fc16f117ae7a9a0", "http://www.sharesdk.cn");
+//			ServiceManager.ins().initConfig(ServiceType.SINA, "", "3912828254", "1c72050a8b871cb46a1759dc5c77fa63",  "https://api.weibo.com/oauth2/default.html");
 		}
 		
 		
@@ -86,11 +86,11 @@ package com.kboctopus.fh.screen
 		// temp
 		private function _shareQQHandler(e:starling.events.Event) : void
 		{
-			ServiceManager.ins().authAndShare(ServiceType.TENCENT, "黑色的一片", testBa, shareBack, shareError);
+//			ServiceManager.ins().authAndShare(ServiceType.TENCENT, "黑色的一片", testBa, shareBack, shareError);
 		}
 		private function _shareSinaHandler(e:starling.events.Event) : void
 		{
-			ServiceManager.ins().authAndShare(ServiceType.SINA, "黑色的一片", testBa, shareBack, shareError);
+//			ServiceManager.ins().authAndShare(ServiceType.SINA, "黑色的一片", testBa, shareBack, shareError);
 		}
 		private function shareBack(result:String):void
 		{

@@ -4,6 +4,7 @@ package com.kboctopus.fh.screen
 	import com.kboctopus.fh.component.Role;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.tools.AssetTool;
+	import com.kboctopus.steer.geom.Vector2D;
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -20,8 +21,7 @@ package com.kboctopus.fh.screen
 		private var _touchPanel:PlayTouchPanel;
 		private var _role:Role;
 		
-		private var _force:Number = 0;   // 拉力
-		private var _friction:Number = 0;  // 摩擦力
+		private var _force:Vector2D = new Vector2D();
 		
 		public function PlayScreen(manager:IScreenManager)
 		{
@@ -58,24 +58,9 @@ package com.kboctopus.fh.screen
 		
 		private function _onUpdateHandler(e:Event) : void
 		{
-			if (this._role.vx>0)
-			{
-				this._friction = 0-FRICTION_VALUE;
-			} else if (this._role.vx<0)
-			{
-				this._friction = FRICTION_VALUE;
-			} else {
-				this._friction = 0;
-			}
-			
-			var f:Number = this._force+this._friction;
-			this._role.vx += f;
-			if (this._force==0 && Math.abs(this._role.vx)<f)
-			{
-				this._role.x += this._role.vx;
-				this._role.vx = 0;
-			} 
-			this._role.x += this._role.vx;
+			this._role.applyForces(this._force);
+			this._role.move();
+
 			if (this._role.x < 0)
 			{
 				this._role.x += ConstGame.GAME_W;
@@ -94,25 +79,23 @@ package com.kboctopus.fh.screen
 				return;
 			}
 			
-			
 			switch(touch.phase) 
 			{
 				case TouchPhase.BEGAN:
 				case TouchPhase.MOVED:
 					if (touch.globalX > ConstGame.GAME_W*.5)
 					{
-						this._force = 10 + (touch.globalX-ConstGame.GAME_W*.5)/60;
+						this._force.x = 5;
 					} else if (touch.globalX < ConstGame.GAME_W*.5)
 					{
-						this._force = -10 + (touch.globalX-ConstGame.GAME_W*.5)/60;
+						this._force.x = -5;
 					} else 
 					{
-						this._force = 0;
+						this._force.x = 0;
 					}
-					trace("force:" + this._force);
 					break;
 				case TouchPhase.ENDED:
-					this._force = 0;
+					this._force.x = 0;
 					break;
 				default:
 					break;

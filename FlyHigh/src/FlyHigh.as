@@ -9,13 +9,13 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
+	import flash.geom.Rectangle;
 	
-	[SWF(width="480", height="800")]
+	[SWF(width="480", height="800", frameRate="60")]
 	public class FlyHigh extends Sprite
 	{
 		private var _myStarling:Starling;
@@ -55,7 +55,7 @@ package
 			this._myStarling.enableErrorChecking = false;
 			
 			this._myStarling.start();
-			this._myStarling.stage.color = 0x8ec2f5;
+//			this._myStarling.stage.color = 0x8ec2f5;
 			this._myStarling.addEventListener(starling.events.Event.ROOT_CREATED, _onRootCreated);
 			
 			this.stage.addEventListener(flash.events.Event.RESIZE, _stage_resizeHandler, false, int.MAX_VALUE, true);
