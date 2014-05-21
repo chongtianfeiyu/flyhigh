@@ -15,7 +15,7 @@ package
 	import starling.events.Event;
 	import flash.geom.Rectangle;
 	
-	[SWF(width="480", height="800", frameRate="60")]
+	[SWF(frameRate="60")]
 	public class FlyHigh extends Sprite
 	{
 		private var _myStarling:Starling;
@@ -53,6 +53,8 @@ package
 		{
 			this._myStarling = new Starling(Game, this.stage);
 			this._myStarling.enableErrorChecking = false;
+			this._myStarling.stage.stageWidth = ConstGame.GAME_W;
+			this._myStarling.stage.stageHeight = ConstGame.GAME_H;
 			
 			this._myStarling.start();
 //			this._myStarling.stage.color = 0x8ec2f5;
@@ -65,7 +67,12 @@ package
 		
 		private function _onRootCreated(e:starling.events.Event, game:Game):void
 		{
-			AssetTool.ins().loadPath("assets/ui/temp", "temp", gameStart);
+			AssetTool.ins().loadImg("assets/ui/temp", "temp", loadFont);
+			
+			function loadFont() : void
+			{
+				AssetTool.ins().initFont("assets/font/en", "my_font", gameStart);
+			}
 		
 			function gameStart() : void
 			{
@@ -76,17 +83,18 @@ package
 					_launchImg.unloadAndStop(true);
 					_launchImg = null;
 				}
+				_stage_resizeHandler(null);
 			}
 		}
 		
 		
 		private function _stage_resizeHandler(event:flash.events.Event):void
 		{
-			ConstGame.GAME_W = this.stage.stageWidth;
-			ConstGame.GAME_H = this.stage.stageHeight;
+//			ConstGame.GAME_W = this.stage.stageWidth;
+//			ConstGame.GAME_H = this.stage.stageHeight;
 			
-			this._myStarling.stage.stageWidth = ConstGame.GAME_W;
-			this._myStarling.stage.stageHeight = ConstGame.GAME_H;
+//			this._myStarling.stage.stageWidth = ConstGame.GAME_W;
+//			this._myStarling.stage.stageHeight = ConstGame.GAME_H;
 			
 			const viewPort:Rectangle = this._myStarling.viewPort;
 			viewPort.width = this.stage.stageWidth;
