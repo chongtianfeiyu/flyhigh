@@ -1,13 +1,16 @@
 package com.kboctopus.fh
 {
+	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
 	import com.kboctopus.fh.screen.BaseScreen;
 	import com.kboctopus.fh.screen.IScreenManager;
 	import com.kboctopus.fh.screen.PlayScreen;
 	import com.kboctopus.fh.screen.StartScreen;
+	import com.kboctopus.fh.tools.AssetTool;
 	
 	import flash.utils.Dictionary;
 	
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	
 	public class Game extends Sprite implements IScreenManager
@@ -20,7 +23,7 @@ package com.kboctopus.fh
 			super();
 		}
 		
-		
+
 		public function start() : void
 		{
 			var screen:BaseScreen = new StartScreen(this);

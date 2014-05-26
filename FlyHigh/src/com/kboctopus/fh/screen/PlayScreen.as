@@ -12,12 +12,14 @@ package com.kboctopus.fh.screen
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.extensions.PDParticleSystem;
 
 	public class PlayScreen extends BaseScreen
 	{
@@ -33,7 +35,7 @@ package com.kboctopus.fh.screen
 		private var _poolBaffle:Vector.<Baffle> = new Vector.<Baffle>();
 		
 		private var _createBaffleTimer:Timer;
-		
+		private var _pdParticle:PDParticleSystem;
 		private var _score:Number;
 		
 		public function PlayScreen(manager:IScreenManager)
@@ -50,6 +52,12 @@ package com.kboctopus.fh.screen
 		}
 		
 		
+		override public function destroy():void
+		{
+			super.destroy();
+			this._pdParticle.stop();
+		}
+		
 		override public function reset():void
 		{
 			super.reset();
@@ -63,12 +71,22 @@ package com.kboctopus.fh.screen
 				this._baffleContainer.removeChild(b);
 				this._poolBaffle.push(b);
 			}
+			this._pdParticle.start();
 		}
 		
 		
 		private function againHandler() : void
 		{
-			this.reset();
+			this.resume();
+			this._score = 0;
+			var len:uint = this._showBaffle.length;
+			var b:Baffle;
+			while(len--)
+			{
+				b = this._showBaffle.pop();
+				this._baffleContainer.removeChild(b);
+				this._poolBaffle.push(b);
+			}
 			this.removeChild(this._gameOverPanel);
 		}
 		
@@ -109,6 +127,7 @@ package com.kboctopus.fh.screen
 			
 			this._touchPanel = new PlayTouchPanel();
 			this._touchPanel.y = ConstGame.GAME_H - this._touchPanel.height;
+			this._touchPanel.x = ConstGame.GAME_W>>1;
 			this.addChild(this._touchPanel);
 			
 			this._gameOverPanel = new GameOverPanel();
@@ -116,6 +135,12 @@ package com.kboctopus.fh.screen
 			this._gameOverPanel.y = 250;
 			this._gameOverPanel.againHandler = this.againHandler;
 			this._gameOverPanel.returnHandler = this.returnHandler;
+			
+			this._pdParticle = AssetTool.ins().getParticle("p1");
+			this._pdParticle.emitterX = ConstGame.GAME_W>>1;
+			this._pdParticle.emitterY = ConstGame.GAME_H>>1;
+			this.addChild(this._pdParticle);
+			Starling.juggler.add(this._pdParticle);
 		}
 		
 		
@@ -193,10 +218,12 @@ package com.kboctopus.fh.screen
 			{
 				case TouchPhase.BEGAN:
 				case TouchPhase.MOVED:
-					this._force.x = (touch.globalX-ConstGame.GAME_W*.5)/24;
+					this._force.x = (touch.globalX-ConstGame.GAME_W*.5)/12;
+					this._role.setForceDic(this._force.x);
 					break;
 				case TouchPhase.ENDED:
 					this._force.x = 0;
+					this._role.setForceDic(this._force.x);
 					break;
 				default:
 					break;

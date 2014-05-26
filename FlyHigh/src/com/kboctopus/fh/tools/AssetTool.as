@@ -8,6 +8,7 @@ package com.kboctopus.fh.tools
 	import flash.net.URLRequest;
 	import flash.utils.Dictionary;
 	
+	import starling.extensions.PDParticleSystem;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.textures.Texture;
@@ -18,12 +19,14 @@ package com.kboctopus.fh.tools
 	{
 		private static const TYPE_IMG:int = 0;
 		private static const TYPE_FONT:int = 1;
+		private static const TYPE_PARTICLE:int = 2;
 		
 		private var _assetManager:AssetManager;
 		private var _ldr:Loader;
 		private var _uldr:URLLoader;
 		private var _path:String;
 		private var _atlasDic:Dictionary;
+		private var _particleDic:Dictionary;
 		private var _tmpName:String;
 		private var _callback:Function;
 		
@@ -40,6 +43,7 @@ package com.kboctopus.fh.tools
 			
 			this._assetManager = new AssetManager();
 			this._atlasDic = new Dictionary();
+			this._particleDic = new Dictionary();
 			this._ldr = new Loader();
 			this._uldr = new URLLoader();
 			this._ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, _loadComplete);
@@ -49,26 +53,34 @@ package com.kboctopus.fh.tools
 		
 		private function _loadComplete(event:Event):void
 		{
-			if (this._type == TYPE_IMG)
+			switch (this._type)
 			{
-				this._uldr.load(new URLRequest(this._path+".xml"));
-			}
-			else
-			{
-				this._uldr.load(new URLRequest(this._path+".fnt"));
+				case TYPE_IMG:
+					this._uldr.load(new URLRequest(this._path+".xml"));
+					break;
+				case TYPE_FONT:
+					this._uldr.load(new URLRequest(this._path+".fnt"));
+					break;
+				case TYPE_PARTICLE:
+					this._uldr.load(new URLRequest(this._path+".pex"));
+					break;
 			}
 		}		
 		
 		
 		private function _loadXmlComplete(event:Event):void
 		{
-			if (this._type == TYPE_IMG)
+			switch (this._type)
 			{
-				this._atlasDic[this._tmpName] = new TextureAtlas(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data));
-			}
-			else
-			{
-				TextField.registerBitmapFont(new BitmapFont(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data)), this._tmpName);
+				case TYPE_IMG:
+					this._atlasDic[this._tmpName] = new TextureAtlas(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data));
+					break;
+				case TYPE_FONT:
+					TextField.registerBitmapFont(new BitmapFont(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data)), this._tmpName);
+					break;
+				case TYPE_PARTICLE:
+					this._particleDic[this._tmpName] = new PDParticleSystem(XML(this._uldr.data), Texture.fromBitmap(this._ldr.content as Bitmap));
+					break;
 			}
 			this._callback();
 		}
@@ -90,7 +102,13 @@ package com.kboctopus.fh.tools
 		}
 		
 		
-		public function loadImg(path:String, name:String, callback:Function) : void
+		public function getParticle(name:String) : PDParticleSystem
+		{
+			return this._particleDic[name] as PDParticleSystem;
+		}
+		
+		
+		public function initTexture(path:String, name:String, callback:Function) : void
 		{
 			this._type = TYPE_IMG;
 			_loadSource(path, name, callback);
@@ -100,6 +118,13 @@ package com.kboctopus.fh.tools
 		public function initFont(path:String, name:String, callback:Function) : void
 		{
 			this._type = TYPE_FONT;
+			_loadSource(path, name, callback);
+		}
+		
+		
+		public function initParticle(path:String, name:String, callback:Function) : void
+		{
+			this._type = TYPE_PARTICLE;
 			_loadSource(path, name, callback);
 		}
 		

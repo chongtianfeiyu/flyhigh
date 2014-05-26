@@ -11,7 +11,6 @@ package com.kboctopus.fh.component
 	public class GameOverPanel extends Sprite
 	{
 		private var _bg:Image;
-		private var _goTF:TextField;
 		private var _returnBtn:MyButton;
 		private var _againBtn:MyButton;
 		
@@ -26,17 +25,13 @@ package com.kboctopus.fh.component
 		private function _initUI() : void
 		{
 			// init bg
-			this._bg = new Image(AssetTool.ins().getAtlas("temp").getTexture("9"));
+			this._bg = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_1"));
 			this.addChild(this._bg);
 			
-			// init tf
-			this._goTF = new TextField(360, 110, "Game Over", "my_font", 50, 0xffffff);
-			this.addChild(this._goTF);
-			
 			// init btn
-			this._returnBtn = new MyButton("return", _clickBtnHandler, 0xffffff);
+			this._returnBtn = new MyButton("6_1", _clickReturnHandler);
 			this.addChild(this._returnBtn);
-			this._againBtn = new MyButton("again", _clickBtnHandler, 0xffffff);
+			this._againBtn = new MyButton("6_2", _clickAgainHandler);
 			this.addChild(this._againBtn);
 			this._returnBtn.y = this._againBtn.y = 130;
 			this._returnBtn.x = 40;
@@ -50,17 +45,14 @@ package com.kboctopus.fh.component
 		
 		public var returnHandler:Function;
 		public var againHandler:Function;
-		private function _clickBtnHandler(btn:MyButton) : void
+		private function _clickReturnHandler(btn:MyButton) : void
 		{
-			switch(btn.lab)
-			{
-				case "return":
-					returnHandler();
-					break;
-				case "again":
-					againHandler();
-					break;
-			}
+			returnHandler();
+		}
+		
+		private function _clickAgainHandler(btn:MyButton) : void
+		{
+			againHandler();
 		}
 	}
 }

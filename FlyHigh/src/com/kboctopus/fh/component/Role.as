@@ -5,6 +5,7 @@ package com.kboctopus.fh.component
 	
 	import starling.display.Image;
 	import starling.display.Sprite;
+	import starling.textures.Texture;
 	
 	public class Role extends Sprite
 	{
@@ -13,8 +14,16 @@ package com.kboctopus.fh.component
 		private var _mass:Number = 20;
 		private var _position:Vector2D;  // 当前位置
 		private var _velocity:Vector2D;  // 加速度
-		private var _maxSpeed:Number = 30;  // 最高速
+		private var _maxSpeed:Number = 60;  // 最高速
 		private var _force:Vector2D;  // 外部作用力
+		
+		private static const DIC_LEFT:int = 1;
+		private static const DIC_MID:int = 0;
+		private static const DIC_RIGHT:int = 2;
+		private var _dic:int = 0;
+		private var _midTexture:Texture;
+		private var _leftTexture:Texture;
+		private var _rightTexture:Texture;
 		
 		public function Role()
 		{
@@ -27,7 +36,10 @@ package com.kboctopus.fh.component
 		
 		private function _initUI() : void
 		{
-			this._icon = new Image(AssetTool.ins().getAtlas("temp").getTexture("1"));
+			this._midTexture = AssetTool.ins().getAtlas("temp").getTexture("7_1");
+			this._leftTexture = AssetTool.ins().getAtlas("temp").getTexture("7_2");
+			this._rightTexture = AssetTool.ins().getAtlas("temp").getTexture("7_3");
+			this._icon = new Image(this._midTexture);
 			this.addChild(this._icon);
 		}
 		
@@ -39,6 +51,23 @@ package com.kboctopus.fh.component
 			for (var i:int=0; i<len; i++)
 			{
 				this._force = this._force.add(args[i]);
+			}
+		}
+		
+		
+		public function setForceDic(v:Number) : void
+		{
+			if (v == 0)
+			{
+				dic = 0;
+			}
+			else if (v < 0)
+			{
+				dic = 1;
+			}
+			else
+			{
+				dic = 2;
 			}
 		}
 		
@@ -76,5 +105,28 @@ package com.kboctopus.fh.component
 			super.y = value;
 			_position.y = y;
 		}
+
+		private function set dic(value:int):void
+		{
+			if (value == _dic)
+			{
+				return;
+			}
+			_dic = value;
+			switch(_dic)
+			{
+				case DIC_MID:
+					this._icon.texture = this._midTexture;
+					break;
+				case DIC_LEFT:
+					this._icon.texture = this._leftTexture;
+					break;
+				case DIC_RIGHT:
+					this._icon.texture = this._rightTexture;
+					break;
+			}
+			this._icon.readjustSize();
+		}
+
 	}
 }

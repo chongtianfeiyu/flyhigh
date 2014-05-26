@@ -1,12 +1,16 @@
 package com.kboctopus.fh.component
 {
+	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.tools.AssetTool;
 	
 	import starling.display.Image;
+	import starling.display.QuadBatch;
 	import starling.display.Sprite;
 	
 	public class Baffle extends Sprite
 	{
+		private var qbWidth:Number = 0;
+		
 		public function Baffle()
 		{
 			_initUI();
@@ -15,11 +19,26 @@ package com.kboctopus.fh.component
 		
 		private function _initUI() : void
 		{
-			var img:Image = new Image(AssetTool.ins().getAtlas("temp").getTexture("8"));
-			this.addChild(img);
-			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("8"));
-			img.x = img.width + 120;
-			this.addChild(img);
+			var qb:QuadBatch = new QuadBatch();
+			var img:Image = new Image(AssetTool.ins().getAtlas("temp").getTexture("8_1"));
+			qb.addImage(img);
+			
+			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("8_2"));
+			while (qb.width<ConstGame.GAME_W)
+			{
+				img.x = qb.width-.5;
+				qb.addImage(img);
+			}
+			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("8_3"));
+			img.x = qb.width - 1;
+			qb.addImage(img);
+			
+			qbWidth = qb.width;
+			var qb2:QuadBatch = new QuadBatch();
+			this.addChild(qb2);
+			qb2.addQuadBatch(qb);
+			qb.x = qbWidth + 120;
+			qb2.addQuadBatch(qb);
 		}
 		
 		
@@ -27,7 +46,7 @@ package com.kboctopus.fh.component
 		public function reset() : void
 		{
 			this.y = -80;
-			this.x = -Math.random()*360-120;
+			this.x = -qbWidth + Math.random()*(ConstGame.GAME_W-120);
 		}
 		
 		
@@ -39,7 +58,7 @@ package com.kboctopus.fh.component
 		
 		public function out() : Boolean
 		{
-			return (this.y>=800);
+			return (this.y>=ConstGame.GAME_H);
 		}
 		
 		
@@ -54,7 +73,7 @@ package com.kboctopus.fh.component
 				return false;
 			}
 			var disX:Number = role.x-this.x;
-			if (disX>=480 && disX<=600)
+			if (disX>=qbWidth && disX<=qbWidth+120)
 			{
 				return false;
 			}

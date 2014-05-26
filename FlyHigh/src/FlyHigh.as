@@ -67,11 +67,16 @@ package
 		
 		private function _onRootCreated(e:starling.events.Event, game:Game):void
 		{
-			AssetTool.ins().loadImg("assets/ui/temp", "temp", loadFont);
+			AssetTool.ins().initTexture("assets/ui/temp", "temp", loadFont);
 			
 			function loadFont() : void
 			{
-				AssetTool.ins().initFont("assets/font/en", "my_font", gameStart);
+				AssetTool.ins().initFont("assets/font/en", "my_font", loadParticle);
+			}
+			
+			function loadParticle() : void
+			{
+				AssetTool.ins().initParticle("assets/particle/p1", "p1", gameStart);
 			}
 		
 			function gameStart() : void
@@ -90,8 +95,8 @@ package
 		
 		private function _stage_resizeHandler(event:flash.events.Event):void
 		{
-//			ConstGame.GAME_W = this.stage.stageWidth;
-//			ConstGame.GAME_H = this.stage.stageHeight;
+			ConstGame.GAME_W = this.stage.stageWidth;
+			ConstGame.GAME_H = this.stage.stageHeight;
 			
 //			this._myStarling.stage.stageWidth = ConstGame.GAME_W;
 //			this._myStarling.stage.stageHeight = ConstGame.GAME_H;

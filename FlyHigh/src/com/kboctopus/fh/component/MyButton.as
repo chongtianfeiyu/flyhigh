@@ -12,26 +12,20 @@ package com.kboctopus.fh.component
 	public class MyButton extends Sprite
 	{
 		private var _bg:Image;
-		private var _tf:TextField;
 		private var _clickHandler:Function;
 		
-		public function MyButton(lab:String, click:Function, color:uint=0)
+		public function MyButton(tex:String, click:Function)
 		{
 			this._clickHandler = click;
-			_initUI(color);
+			_initUI(tex);
 			_initEvent();
-			this.lab = lab;
 		}
 		
 		
-		private function _initUI(color:uint) : void
+		private function _initUI(tex:String) : void
 		{
-			this._bg = new Image(AssetTool.ins().getAtlas("temp").getTexture("2"));
+			this._bg = new Image(AssetTool.ins().getAtlas("temp").getTexture(tex));
 			this.addChild(this._bg);
-			
-			this._tf = new TextField(110, 50, "", "my_font", 40, color);
-			this._tf.touchable = false;
-			this.addChild(this._tf);
 		}
 		
 		
@@ -48,17 +42,6 @@ package com.kboctopus.fh.component
 			{
 				this._clickHandler(this);
 			}
-		}
-		
-		
-		public function set lab(v:String) : void
-		{
-			this._tf.text = v;
-		}
-		
-		public function get lab() : String
-		{
-			return this._tf.text;
 		}
 	}
 }

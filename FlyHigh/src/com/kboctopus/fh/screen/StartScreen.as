@@ -20,7 +20,8 @@ package com.kboctopus.fh.screen
 	public class StartScreen extends BaseScreen
 	{
 		private var _bg:Image;
-		private var _startBtn:MyButton;
+		private var _classicBtn:MyButton;
+		private var _roadBtn:MyButton;
 		
 		// temp
 		private var _shareQQ:Button;
@@ -41,21 +42,25 @@ package com.kboctopus.fh.screen
 		override protected function initUI():void 
 		{
 			// init bg
-			this._bg = new Image(Texture.fromColor(ConstGame.GAME_W, ConstGame.GAME_H, Math.random()*0xffffffff));
-			this.addChild(this._bg);
+//			this._bg = new Image(Texture.fromColor(ConstGame.GAME_W, ConstGame.GAME_H, Math.random()*0xffffffff));
+//			this.addChild(this._bg);
 			
 			// init btn
-			this._startBtn = new MyButton("start", _onStartHandler);
-			this._startBtn.x = (ConstGame.GAME_W-this._startBtn.width)>>1;
-			this._startBtn.y = (ConstGame.GAME_H-this._startBtn.height)>>1;
-			this.addChild(this._startBtn);
+			this._classicBtn = new MyButton("0_1", _onClassicHandler);
+			this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
+			this._classicBtn.y = ((ConstGame.GAME_H-this._classicBtn.height)>>1) - 50;
+			this.addChild(this._classicBtn);
+			this._roadBtn = new MyButton("0_2", _onRoadHandler);
+			this._roadBtn.x = (ConstGame.GAME_W-this._roadBtn.width)>>1;
+			this._roadBtn.y = ((ConstGame.GAME_H-this._roadBtn.height)>>1) + 50;
+			this.addChild(this._roadBtn);
 			
 			// temp
-			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("5"));
+			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_2"));
 			this._shareQQ.x = 20;
 			this._shareQQ.y = 20;
 			this.addChild(this._shareQQ);
-			this._shareSina = new Button(AssetTool.ins().getAtlas("temp").getTexture("6"));
+			this._shareSina = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_3"));
 			this._shareSina.x = 20;
 			this._shareSina.y = 100;
 			this.addChild(this._shareSina);
@@ -103,9 +108,15 @@ package com.kboctopus.fh.screen
 			this.testBa = this._ldr.data;
 		}
 		
-		private function _onStartHandler(v:MyButton) : void
+		private function _onClassicHandler(v:MyButton) : void
 		{
 			this.screenManager.showScreen(ConstScreen.ID_PLAY);
+		}
+		
+		
+		private function _onRoadHandler(v:MyButton) : void
+		{
+			trace("road mode is not OK!");
 		}
 	}
 }
