@@ -31,6 +31,7 @@ package com.kboctopus.fh.component
 			this._velocity = new Vector2D();
 			this._force = new Vector2D();
 			_initUI();
+			this.touchable = false;
 		}
 		
 		

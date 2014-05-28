@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://texturepacker.com-->
-<!-- $TexturePacker:SmartUpdate:190091e2c9e6a894685c70ec068a50d2$ -->
+<!-- $TexturePacker:SmartUpdate:eae7dcfc3e0ce2e3785bbf3585e8268b$ -->
 <TextureAtlas imagePath="temp.png">
-    <SubTexture name="0_1" x="50" y="352" width="200" height="60"/>
-    <SubTexture name="0_2" x="2" y="434" width="200" height="60"/>
-    <SubTexture name="1_1" x="204" y="414" width="50" height="50"/>
-    <SubTexture name="1_2" x="458" y="300" width="50" height="50"/>
-    <SubTexture name="1_3" x="458" y="248" width="50" height="50"/>
-    <SubTexture name="2_1" x="404" y="2" width="72" height="160"/>
-    <SubTexture name="3" x="478" y="2" width="9" height="160"/>
-    <SubTexture name="4" x="489" y="2" width="5" height="160"/>
-    <SubTexture name="5_1" x="2" y="2" width="400" height="300"/>
-    <SubTexture name="6_1" x="374" y="352" width="120" height="50"/>
-    <SubTexture name="6_2" x="252" y="304" width="120" height="50"/>
-    <SubTexture name="7_1" x="2" y="304" width="40" height="40"/>
-    <SubTexture name="7_2" x="468" y="206" width="40" height="40"/>
-    <SubTexture name="7_3" x="468" y="164" width="40" height="40"/>
-    <SubTexture name="8_1" x="2" y="352" width="46" height="80"/>
-    <SubTexture name="8_2" x="404" y="246" width="52" height="80"/>
-    <SubTexture name="8_3" x="404" y="164" width="62" height="80"/>
+    <SubTexture name="0_1" x="204" y="350" width="200" height="80"/>
+    <SubTexture name="0_2" x="2" y="350" width="200" height="80"/>
+    <SubTexture name="1_1" x="402" y="288" width="60" height="60"/>
+    <SubTexture name="1_2" x="402" y="226" width="60" height="60"/>
+    <SubTexture name="1_3" x="402" y="164" width="60" height="60"/>
+    <SubTexture name="2_1" x="402" y="2" width="68" height="160"/>
+    <SubTexture name="3_1" x="2" y="2" width="398" height="298" frameX="-2" frameY="-2" frameWidth="400" frameHeight="300"/>
+    <SubTexture name="4_1" x="124" y="432" width="120" height="50"/>
+    <SubTexture name="4_2" x="2" y="432" width="120" height="50"/>
+    <SubTexture name="5_1" x="472" y="2" width="30" height="80"/>
+    <SubTexture name="5_2" x="406" y="350" width="50" height="80"/>
+    <SubTexture name="5_3" x="472" y="84" width="10" height="80"/>
+    <SubTexture name="6_1" x="464" y="164" width="4" height="160"/>
+    <SubTexture name="6_2" x="504" y="2" width="4" height="160"/>
+    <SubTexture name="7_1" x="470" y="250" width="40" height="40"/>
+    <SubTexture name="7_2" x="470" y="208" width="40" height="40"/>
+    <SubTexture name="7_3" x="470" y="166" width="40" height="40"/>
 </TextureAtlas>

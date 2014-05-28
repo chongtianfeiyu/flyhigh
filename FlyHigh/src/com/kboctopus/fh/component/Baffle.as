@@ -20,17 +20,18 @@ package com.kboctopus.fh.component
 		private function _initUI() : void
 		{
 			var qb:QuadBatch = new QuadBatch();
-			var img:Image = new Image(AssetTool.ins().getAtlas("temp").getTexture("8_1"));
+			var img:Image = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_1"));
 			qb.addImage(img);
 			
-			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("8_2"));
+			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_2"));
 			while (qb.width<ConstGame.GAME_W)
 			{
-				img.x = qb.width-.5;
+				img.x = qb.width;
 				qb.addImage(img);
 			}
-			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("8_3"));
-			img.x = qb.width - 1;
+			
+			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_3"));
+			img.x = qb.width;
 			qb.addImage(img);
 			
 			qbWidth = qb.width;
@@ -39,6 +40,8 @@ package com.kboctopus.fh.component
 			qb2.addQuadBatch(qb);
 			qb.x = qbWidth + 120;
 			qb2.addQuadBatch(qb);
+			
+			this.touchable = false;
 		}
 		
 		
@@ -50,15 +53,15 @@ package com.kboctopus.fh.component
 		}
 		
 		
-		public function move() : void
+		public function move(v:Number) : void
 		{
-			this.y += 1.5;
+			this.y += v;
 		}
 		
 		
 		public function out() : Boolean
 		{
-			return (this.y>=ConstGame.GAME_H);
+			return (this.y>=ConstGame.GAME_H-160);
 		}
 		
 		
@@ -73,7 +76,7 @@ package com.kboctopus.fh.component
 				return false;
 			}
 			var disX:Number = role.x-this.x;
-			if (disX>=qbWidth && disX<=qbWidth+120)
+			if (disX>=qbWidth && disX<=qbWidth+80)
 			{
 				return false;
 			}

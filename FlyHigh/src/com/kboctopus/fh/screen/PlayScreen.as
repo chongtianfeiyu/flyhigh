@@ -9,9 +9,6 @@ package com.kboctopus.fh.screen
 	import com.kboctopus.fh.tools.AssetTool;
 	import com.kboctopus.steer.geom.Vector2D;
 	
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	
 	import starling.core.Starling;
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -20,37 +17,31 @@ package com.kboctopus.fh.screen
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.extensions.PDParticleSystem;
+	import starling.text.TextField;
 
 	public class PlayScreen extends BaseScreen
 	{
+		private var _showContainer:Sprite;
+		private var _winContainer:Sprite;
+		
 		private var _baffleContainer:Sprite;
 		private var _bg:Image;
 		private var _touchPanel:PlayTouchPanel;
 		private var _role:Role;
 		private var _gameOverPanel:GameOverPanel;
 		
-		private var _force:Vector2D = new Vector2D();
-		
 		private var _showBaffle:Vector.<Baffle> = new Vector.<Baffle>();
 		private var _poolBaffle:Vector.<Baffle> = new Vector.<Baffle>();
 		
-		private var _createBaffleTimer:Timer;
 		private var _pdParticle:PDParticleSystem;
 		private var _score:Number;
 		
+		private var _ct:int;
+		
 		public function PlayScreen(manager:IScreenManager)
 		{
-			_initTimer();
 			super(manager);
 		}
-		
-		
-		private function _initTimer() : void
-		{
-			this._createBaffleTimer = new Timer(4000);
-			this._createBaffleTimer.addEventListener(TimerEvent.TIMER, _createBaffle);
-		}
-		
 		
 		override public function destroy():void
 		{
@@ -61,8 +52,8 @@ package com.kboctopus.fh.screen
 		override public function reset():void
 		{
 			super.reset();
-			this.resume();
-			this._score = 0;
+			this._ct = 0;
+			this.score = 0;
 			var len:uint = this._showBaffle.length;
 			var b:Baffle;
 			while(len--)
@@ -72,34 +63,25 @@ package com.kboctopus.fh.screen
 				this._poolBaffle.push(b);
 			}
 			this._pdParticle.start();
+			if (this._gameOverPanel.parent != null)
+			{
+				this._winContainer.removeChild(this._gameOverPanel);
+			}
 		}
 		
 		
 		private function againHandler() : void
 		{
-			this.resume();
-			this._score = 0;
-			var len:uint = this._showBaffle.length;
-			var b:Baffle;
-			while(len--)
-			{
-				b = this._showBaffle.pop();
-				this._baffleContainer.removeChild(b);
-				this._poolBaffle.push(b);
-			}
-			this.removeChild(this._gameOverPanel);
+			reset();
 		}
 		
 		
 		private function returnHandler() : void
 		{
-			this.removeChild(this._gameOverPanel);
-			this.pause();
-			this.screenManager.showScreen(ConstScreen.ID_START);
 		}
 		
 		
-		private function _createBaffle(event:TimerEvent):void
+		private function _createBaffle():void
 		{
 			var baffle:Baffle;
 			if (this._poolBaffle.length>0)
@@ -117,64 +99,87 @@ package com.kboctopus.fh.screen
 		
 		override protected function initUI():void
 		{
-			this._baffleContainer = new Sprite();
-			this.addChild(this._baffleContainer);
-			
-			this._role = new Role();
-			this._role.x = (ConstGame.GAME_W-this._role.width)>>1;
-			this._role.y = 580;
-			this.addChild(this._role);
-			
-			this._touchPanel = new PlayTouchPanel();
-			this._touchPanel.y = ConstGame.GAME_H - this._touchPanel.height;
-			this._touchPanel.x = ConstGame.GAME_W>>1;
-			this.addChild(this._touchPanel);
-			
-			this._gameOverPanel = new GameOverPanel();
-			this._gameOverPanel.x = 60;
-			this._gameOverPanel.y = 250;
-			this._gameOverPanel.againHandler = this.againHandler;
-			this._gameOverPanel.returnHandler = this.returnHandler;
-			
 			this._pdParticle = AssetTool.ins().getParticle("p1");
 			this._pdParticle.emitterX = ConstGame.GAME_W>>1;
 			this._pdParticle.emitterY = ConstGame.GAME_H>>1;
 			this.addChild(this._pdParticle);
 			Starling.juggler.add(this._pdParticle);
+			
+			this._showContainer = new Sprite();
+			this.addChild(this._showContainer);
+			this._winContainer = new Sprite();
+			this.addChild(this._winContainer);
+			
+			this._baffleContainer = new Sprite();
+			this._showContainer.addChild(this._baffleContainer);
+			
+			this._role = new Role();
+			this._role.x = (ConstGame.GAME_W-this._role.width)>>1;
+			this._role.y = ConstGame.GAME_H - 280;
+			this._showContainer.addChild(this._role);
+			
+			this._touchPanel = new PlayTouchPanel(this._role);
+			this._touchPanel.y = ConstGame.GAME_H - this._touchPanel.height;
+			this._touchPanel.x = ConstGame.GAME_W>>1;
+			this._showContainer.addChild(this._touchPanel);
+			
+			this._gameOverPanel = new GameOverPanel();
+			this._gameOverPanel.x = (ConstGame.GAME_W-this._gameOverPanel.width)>>1;
+			this._gameOverPanel.y = (ConstGame.GAME_H-this._gameOverPanel.height)>>1;
+			this._gameOverPanel.againHandler = this.againHandler;
+			this._gameOverPanel.returnHandler = this.returnHandler;
+			
+			tf = new TextField(400, 60, "0", "Verdana", 30, 0xff000000);
+			tf.text = ConstGame.GAME_W + " : " + ConstGame.GAME_H;
+			this._showContainer.addChild(tf);
+		}
+		
+		private function _testTouch(e:TouchEvent) : void
+		{
+			var touch:Touch = e.getTouch(tf, TouchPhase.BEGAN);
+			if (touch != null)
+			{
+				this._speed+=0.3;
+				tf.text = this._speed.toString();
+			}
 		}
 		
 		
 		override protected function initEvents():void
 		{
 			this.addEventListener(Event.ENTER_FRAME, _onUpdateHandler);
-			this._touchPanel.addEventListener(TouchEvent.TOUCH, _onTouchPanelHandler);
+			this._touchPanel.initEvent();
 		}
 		
 		
 		override protected function removeEvents():void
 		{
 			this.removeEventListener(Event.ENTER_FRAME, _onUpdateHandler);
-			this._touchPanel.removeEventListener(TouchEvent.TOUCH, _onTouchPanelHandler);
+			this._touchPanel.removeEvent();
 		}
 		
 		
-		public function pause():void
+		public function gameOver():void
 		{
-			this._createBaffleTimer.stop();
 			removeEvents();
+			this._pdParticle.stop();
+			this._gameOverPanel.setScore(this._score);
+			this._winContainer.addChild(this._gameOverPanel);
 		}
 		
 		
-		public function resume():void
-		{
-			this._createBaffleTimer.start();
-			initEvents();
-		}
-		
-		
+		private var _speed:Number = 3;
+		private var tf:TextField;
 		private function _onUpdateHandler(e:Event) : void
 		{
-			this._role.applyForces(this._force);
+			_ct++;
+			if (_ct >= 100)
+			{
+				_ct = 0;
+				_createBaffle();
+			}
+			
+			this._role.applyForces(this._touchPanel.force);
 			this._role.move();
 
 			if (this._role.x < 0)
@@ -190,44 +195,25 @@ package com.kboctopus.fh.screen
 			{
 				if (b.hitRole(this._role))
 				{
-					this.pause();
-					this.addChild(this._gameOverPanel);
-					trace("game over:" + this._score);
+					this.gameOver();
+					return;
 				}
 				
-				b.move();
+				b.move(_speed);
 				if (b.out())
 				{
-					this._score += 100;
+					this.score = this._score + 1;
 					this._baffleContainer.removeChild(b);
 					this._poolBaffle.push(this._showBaffle.shift());
 				}
 			}
 		}
-		
-		
-		private function _onTouchPanelHandler(e:TouchEvent) : void
+
+		private function set score(value:Number):void
 		{
-			var touch:Touch = e.getTouch(_touchPanel);
-			if (touch == null)
-			{
-				return;
-			}
-			
-			switch(touch.phase) 
-			{
-				case TouchPhase.BEGAN:
-				case TouchPhase.MOVED:
-					this._force.x = (touch.globalX-ConstGame.GAME_W*.5)/12;
-					this._role.setForceDic(this._force.x);
-					break;
-				case TouchPhase.ENDED:
-					this._force.x = 0;
-					this._role.setForceDic(this._force.x);
-					break;
-				default:
-					break;
-			}
+			_score = value;
+			this.tf.text = this._score.toString();
 		}
+
 	}
 }

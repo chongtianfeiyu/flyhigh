@@ -40,7 +40,15 @@ package com.kboctopus.fh.component
 			var touch:Touch = e.getTouch(this, TouchPhase.BEGAN);
 			if (touch != null)
 			{
-				this._clickHandler(this);
+				this.y += 3;
+				return;
+			}
+			
+			touch = e.getTouch(this, TouchPhase.ENDED);
+			if (touch != null)
+			{
+				this.y -= 3;
+				_clickHandler(this);
 			}
 		}
 	}

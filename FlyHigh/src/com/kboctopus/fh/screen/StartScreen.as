@@ -19,7 +19,6 @@ package com.kboctopus.fh.screen
 
 	public class StartScreen extends BaseScreen
 	{
-		private var _bg:Image;
 		private var _classicBtn:MyButton;
 		private var _roadBtn:MyButton;
 		
@@ -41,19 +40,16 @@ package com.kboctopus.fh.screen
 		
 		override protected function initUI():void 
 		{
-			// init bg
-//			this._bg = new Image(Texture.fromColor(ConstGame.GAME_W, ConstGame.GAME_H, Math.random()*0xffffffff));
-//			this.addChild(this._bg);
-			
 			// init btn
 			this._classicBtn = new MyButton("0_1", _onClassicHandler);
-			this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
-			this._classicBtn.y = ((ConstGame.GAME_H-this._classicBtn.height)>>1) - 50;
 			this.addChild(this._classicBtn);
 			this._roadBtn = new MyButton("0_2", _onRoadHandler);
-			this._roadBtn.x = (ConstGame.GAME_W-this._roadBtn.width)>>1;
-			this._roadBtn.y = ((ConstGame.GAME_H-this._roadBtn.height)>>1) + 50;
 			this.addChild(this._roadBtn);
+			
+			this._roadBtn.x = this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
+			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._roadBtn.height+50))>>1) - 50;
+			this._classicBtn.y = startY;
+			this._roadBtn.y = startY + this._classicBtn.height + 50;
 			
 			// temp
 			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_2"));
@@ -62,7 +58,7 @@ package com.kboctopus.fh.screen
 			this.addChild(this._shareQQ);
 			this._shareSina = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_3"));
 			this._shareSina.x = 20;
-			this._shareSina.y = 100;
+			this._shareSina.y = 110;
 			this.addChild(this._shareSina);
 			_ldr = new URLLoader();
 			_ldr.dataFormat = URLLoaderDataFormat.BINARY;
