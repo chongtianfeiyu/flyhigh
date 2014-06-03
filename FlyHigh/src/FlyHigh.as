@@ -9,37 +9,74 @@ package
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
+	import flash.net.URLRequest;
 	import flash.system.Capabilities;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	import starling.core.Starling;
 	import starling.events.Event;
-	import flash.geom.Rectangle;
 	
-	[SWF(width="480", height="800", frameRate="60")]
+	[SWF(frameRate="60")]
 	public class FlyHigh extends Sprite
 	{
 		private var _myStarling:Starling;
+		private var _launchBG:Sprite;
 		private var _launchImg:Loader;
+		private var _starlingHasInit:Boolean = false;
+		private var _launchInterval:uint;
 		
 		public function FlyHigh()
 		{
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			this.mouseEnabled = this.mouseChildren = false;
-			this._showLaunchImg();
 			this.loaderInfo.addEventListener(flash.events.Event.COMPLETE, _loaderInfo_completeHandler);
 		}
 		
 		
 		private function _showLaunchImg() : void
 		{
+			_launchImg = new Loader();
+			_launchImg.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, _loadLaunchComplete);
+			_launchImg.load(new URLRequest("assets/ui/launch.png"));
 		}
 		
 		
+		protected function _loadLaunchComplete(event:flash.events.Event):void
+		{
+			_launchImg.contentLoaderInfo.removeEventListener(flash.events.Event.COMPLETE, _loadLaunchComplete);
+			this._launchImg.x = (ConstGame.GAME_W-this._launchImg.width)>>1;
+			this._launchImg.y = (ConstGame.GAME_H-this._launchImg.height)>>1;
+			this._launchBG = new Sprite();
+			this.addChild(this._launchBG);
+			this._launchBG.graphics.beginFill(0xffffff);
+			this._launchBG.graphics.drawRect(0, 0, ConstGame.GAME_W, ConstGame.GAME_H);
+			this._launchBG.graphics.endFill();
+			this._launchBG.addChild(this._launchImg);
+			this._launchInterval = flash.utils.setInterval(_clearLaunchImg, 1000);
+		}		
+		
+		private function _clearLaunchImg() : void
+		{
+			if (_starlingHasInit)
+			{
+				flash.utils.clearInterval(this._launchInterval);
+				this._launchBG.removeChild(this._launchImg);
+				this.removeChild(this._launchBG);
+				this._launchImg.unloadAndStop(true);
+				this._launchImg = null;
+				this._launchBG = null;
+			}
+		}
+		
 		private function _loaderInfo_completeHandler(event:flash.events.Event):void
 		{
-			ConstGame.GAME_W = 480;
-			ConstGame.GAME_H = 800;
+			ConstGame.GAME_W = this.stage.stageWidth;
+			ConstGame.GAME_H = this.stage.stageHeight;
+			
+			this._showLaunchImg();
 			
 			var iOS:Boolean = Capabilities.manufacturer.indexOf("iOS") != -1;
 			Starling.handleLostContext = !iOS;  
@@ -53,6 +90,8 @@ package
 		{
 			this._myStarling = new Starling(Game, this.stage);
 			this._myStarling.enableErrorChecking = false;
+			this._myStarling.stage.stageWidth = ConstGame.GAME_W;
+			this._myStarling.stage.stageHeight = ConstGame.GAME_H;
 			
 			this._myStarling.start();
 //			this._myStarling.stage.color = 0x8ec2f5;
@@ -65,17 +104,23 @@ package
 		
 		private function _onRootCreated(e:starling.events.Event, game:Game):void
 		{
-			AssetTool.ins().loadPath("assets/ui/temp", "temp", gameStart);
+			AssetTool.ins().initTexture("assets/ui/temp", "temp", loadFont);
+			
+			function loadFont() : void
+			{
+				AssetTool.ins().initFont("assets/font/en", "my_font", loadParticle);
+			}
+			
+			function loadParticle() : void
+			{
+				AssetTool.ins().initParticle("assets/particle/p1", "p1", gameStart);
+			}
 		
 			function gameStart() : void
 			{
 				game.start();
-				if(_launchImg)
-				{
-					removeChild(_launchImg);
-					_launchImg.unloadAndStop(true);
-					_launchImg = null;
-				}
+				_starlingHasInit = true;
+				_stage_resizeHandler(null);
 			}
 		}
 		

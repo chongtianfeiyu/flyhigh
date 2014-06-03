@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<application xmlns="http://ns.adobe.com/air/application/13.0">
+<application xmlns="http://ns.adobe.com/air/application/3.1">
 
 <!-- Adobe AIR Application Descriptor File Template.
 
@@ -108,8 +108,9 @@
 		<aspectRatio>portrait</aspectRatio>
 		<autoOrients>false</autoOrients>
         <renderMode>direct</renderMode>
+        <fullScreen>true</fullScreen>
         <visible>true</visible>
-    	<fullScreen>true</fullScreen>
+    	
     </initialWindow>
 
 	<!-- We recommend omitting the supportedProfiles element, -->
@@ -272,4 +273,9 @@
     </iPhone>
 
 
+<extensions>
+        <extensionID>com.dabing.airextension.Extension</extensionID>
+        <extensionID>com.kboctopus.sns.SnsExtension</extensionID>
+    <extensionID>com.codealchemy.ane.admobane</extensionID>
+    </extensions>
 </application>

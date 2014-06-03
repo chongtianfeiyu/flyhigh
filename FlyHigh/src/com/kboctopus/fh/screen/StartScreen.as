@@ -1,10 +1,9 @@
 package com.kboctopus.fh.screen
 {
+	import com.kboctopus.fh.component.MyButton;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
 	import com.kboctopus.fh.tools.AssetTool;
-//	import com.kboctopus.sns.ServiceManager;
-//	import com.kboctopus.sns.constant.ServiceType;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -16,11 +15,12 @@ package com.kboctopus.fh.screen
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.events.Event;
+	import starling.textures.Texture;
 
 	public class StartScreen extends BaseScreen
 	{
-		private var _bg:Image;
-		private var _startBtn:Button;
+		private var _classicBtn:MyButton;
+		private var _roadBtn:MyButton;
 		
 		// temp
 		private var _shareQQ:Button;
@@ -40,22 +40,25 @@ package com.kboctopus.fh.screen
 		
 		override protected function initUI():void 
 		{
-			// init bg
-			
 			// init btn
-			this._startBtn = new Button(AssetTool.ins().getAtlas("temp").getTexture("2"));
-			this._startBtn.x = (ConstGame.GAME_W-this._startBtn.width)>>1;
-			this._startBtn.y = (ConstGame.GAME_H-this._startBtn.height)>>1;
-			this.addChild(this._startBtn);
+			this._classicBtn = new MyButton("0_1", _onClassicHandler);
+			this.addChild(this._classicBtn);
+			this._roadBtn = new MyButton("0_2", _onRoadHandler);
+			this.addChild(this._roadBtn);
+			
+			this._roadBtn.x = this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
+			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._roadBtn.height+50))>>1) - 50;
+			this._classicBtn.y = startY;
+			this._roadBtn.y = startY + this._classicBtn.height + 50;
 			
 			// temp
-			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("5"));
+			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_2"));
 			this._shareQQ.x = 20;
 			this._shareQQ.y = 20;
 			this.addChild(this._shareQQ);
-			this._shareSina = new Button(AssetTool.ins().getAtlas("temp").getTexture("6"));
+			this._shareSina = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_3"));
 			this._shareSina.x = 20;
-			this._shareSina.y = 100;
+			this._shareSina.y = 110;
 			this.addChild(this._shareSina);
 			_ldr = new URLLoader();
 			_ldr.dataFormat = URLLoaderDataFormat.BINARY;
@@ -66,8 +69,6 @@ package com.kboctopus.fh.screen
 				
 		override protected function initEvents():void
 		{
-			this._startBtn.addEventListener(starling.events.Event.TRIGGERED, _onStartHandler);
-			
 			// temp
 			this._shareQQ.addEventListener(starling.events.Event.TRIGGERED, _shareQQHandler);
 			this._shareSina.addEventListener(starling.events.Event.TRIGGERED, _shareSinaHandler);
@@ -76,8 +77,6 @@ package com.kboctopus.fh.screen
 		
 		override protected function removeEvents():void
 		{
-			this._startBtn.removeEventListener(starling.events.Event.TRIGGERED, _onStartHandler);
-			
 			// temp
 			this._shareQQ.removeEventListener(starling.events.Event.TRIGGERED, _shareQQHandler);
 			this._shareSina.removeEventListener(starling.events.Event.TRIGGERED, _shareSinaHandler);
@@ -105,9 +104,15 @@ package com.kboctopus.fh.screen
 			this.testBa = this._ldr.data;
 		}
 		
-		private function _onStartHandler(e:starling.events.Event) : void
+		private function _onClassicHandler(v:MyButton) : void
 		{
 			this.screenManager.showScreen(ConstScreen.ID_PLAY);
+		}
+		
+		
+		private function _onRoadHandler(v:MyButton) : void
+		{
+			trace("road mode is not OK!");
 		}
 	}
 }
