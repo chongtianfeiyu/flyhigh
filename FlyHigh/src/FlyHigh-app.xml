@@ -273,4 +273,9 @@
     </iPhone>
 
 
+<extensions>
+        <extensionID>com.dabing.airextension.Extension</extensionID>
+        <extensionID>com.kboctopus.sns.SnsExtension</extensionID>
+    <extensionID>com.codealchemy.ane.admobane</extensionID>
+    </extensions>
 </application>

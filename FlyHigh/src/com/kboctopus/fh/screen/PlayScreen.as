@@ -1,5 +1,6 @@
 package com.kboctopus.fh.screen
 {
+	import com.dabing.airextension.GetAndroidPhoneSn;
 	import com.kboctopus.fh.component.Baffle;
 	import com.kboctopus.fh.component.GameOverPanel;
 	import com.kboctopus.fh.component.PlayTouchPanel;
@@ -38,8 +39,13 @@ package com.kboctopus.fh.screen
 		
 		private var _ct:int;
 		
+		private var _flashgetsn:GetAndroidPhoneSn;
+		private var _imei:String;
+		
 		public function PlayScreen(manager:IScreenManager)
 		{
+			this._flashgetsn = new GetAndroidPhoneSn();
+			this._imei = this._flashgetsn.getSn(1);
 			super(manager);
 		}
 		
@@ -130,7 +136,7 @@ package com.kboctopus.fh.screen
 			this._gameOverPanel.returnHandler = this.returnHandler;
 			
 			tf = new TextField(400, 60, "0", "Verdana", 30, 0xff000000);
-			tf.text = ConstGame.GAME_W + " : " + ConstGame.GAME_H;
+			tf.text = this._imei;
 			this._showContainer.addChild(tf);
 		}
 		
@@ -212,7 +218,7 @@ package com.kboctopus.fh.screen
 		private function set score(value:Number):void
 		{
 			_score = value;
-			this.tf.text = this._score.toString();
+//			this.tf.text = this._score.toString();
 		}
 
 	}

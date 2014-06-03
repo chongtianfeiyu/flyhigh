@@ -36,6 +36,9 @@
       </libraryPathEntry>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
       <libraryPathEntry kind="3" linkType="1" path="/Steer/bin/Steer.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="5" linkType="2" path="anes/getImei.ane"/>
+      <libraryPathEntry kind="5" linkType="2" path="anes/shareANE.ane"/>
+      <libraryPathEntry kind="5" linkType="2" path="anes/AdMobAne_Android.ane"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
@@ -52,16 +55,20 @@
       <multiPlatformSettings enabled="true" includePlatformLibs="false" platformID="com.adobe.flexide.multiplatform.android.platform" version="2"/>
       <airSettings airCertificatePath="E:/git/share_ane/share_ane_android/ANE打包/kboctopus.p12" airTimestamp="true" anePathSet="true" version="1">
         <airExcludes/>
-        <anePaths/>
+        <anePaths>
+          <anePathEntry path="E:/git/fh/flyhigh/FlyHigh/anes/getImei.ane"/>
+          <anePathEntry path="E:/git/fh/flyhigh/FlyHigh/anes/shareANE.ane"/>
+          <anePathEntry path="E:/git/fh/flyhigh/FlyHigh/anes/AdMobAne_Android.ane"/>
+        </anePaths>
       </airSettings>
       <actionScriptSettings version="1"/>
     </buildTarget>
     <buildTarget buildTargetName="default">
+      <multiPlatformSettings enabled="false" includePlatformLibs="false" platformID="default" version="2"/>
       <airSettings airCertificatePath="" airTimestamp="true" anePathSet="false" version="1">
         <airExcludes/>
         <anePaths/>
       </airSettings>
-      <multiPlatformSettings enabled="false" includePlatformLibs="false" platformID="default" version="2"/>
       <actionScriptSettings version="1"/>
     </buildTarget>
   </buildTargets>
