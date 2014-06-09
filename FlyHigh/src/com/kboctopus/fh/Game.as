@@ -38,14 +38,14 @@ package com.kboctopus.fh
 		}
 		
 		
-		public function showScreen(id:int) : void
+		public function showScreen(id:int, data:*) : void
 		{
 			//temp
 			_currentScreen.destroy();
 			_currentScreen.visible = false;
 			
 			_currentScreen = _screenDic[id];
-			_currentScreen.reset();
+			_currentScreen.reset(data);
 			_currentScreen.visible = true;
 		}
 	}

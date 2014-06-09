@@ -20,7 +20,7 @@ package com.kboctopus.fh.screen
 	public class StartScreen extends BaseScreen
 	{
 		private var _classicBtn:MyButton;
-		private var _roadBtn:MyButton;
+		private var _zenBtn:MyButton;
 		
 		// temp
 		private var _shareQQ:Button;
@@ -43,13 +43,13 @@ package com.kboctopus.fh.screen
 			// init btn
 			this._classicBtn = new MyButton("0_1", _onClassicHandler);
 			this.addChild(this._classicBtn);
-			this._roadBtn = new MyButton("0_2", _onRoadHandler);
-			this.addChild(this._roadBtn);
+			this._zenBtn = new MyButton("0_2", _onZenHandler);
+			this.addChild(this._zenBtn);
 			
-			this._roadBtn.x = this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
-			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._roadBtn.height+50))>>1) - 50;
+			this._zenBtn.x = this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
+			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._zenBtn.height+50))>>1) - 50;
 			this._classicBtn.y = startY;
-			this._roadBtn.y = startY + this._classicBtn.height + 50;
+			this._zenBtn.y = startY + this._classicBtn.height + 50;
 			
 			// temp
 			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_2"));
@@ -106,13 +106,13 @@ package com.kboctopus.fh.screen
 		
 		private function _onClassicHandler(v:MyButton) : void
 		{
-			this.screenManager.showScreen(ConstScreen.ID_PLAY);
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, "classic");
 		}
 		
 		
-		private function _onRoadHandler(v:MyButton) : void
+		private function _onZenHandler(v:MyButton) : void
 		{
-			trace("road mode is not OK!");
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, "zen");
 		}
 	}
 }

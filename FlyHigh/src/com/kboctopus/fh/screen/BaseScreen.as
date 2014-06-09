@@ -32,7 +32,7 @@ package com.kboctopus.fh.screen
 		}
 		
 		
-		public function reset() : void
+		public function reset(data:*) : void
 		{
 			this.initEvents();
 		}

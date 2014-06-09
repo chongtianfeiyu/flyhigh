@@ -1,12 +1,17 @@
 package com.kboctopus.fh.screen
 {
-	import com.dabing.airextension.GetAndroidPhoneSn;
+//	import com.codealchemy.ane.admobane.AdMobManager;
+//	import com.codealchemy.ane.admobane.AdMobPosition;
+//	import com.codealchemy.ane.admobane.AdMobSize;
+//	import com.dabing.airextension.GetAndroidPhoneSn;
 	import com.kboctopus.fh.component.Baffle;
 	import com.kboctopus.fh.component.GameOverPanel;
 	import com.kboctopus.fh.component.PlayTouchPanel;
 	import com.kboctopus.fh.component.Role;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
+	import com.kboctopus.fh.mode.ClassicMode;
+	import com.kboctopus.fh.mode.IPlayMode;
 	import com.kboctopus.fh.tools.AssetTool;
 	import com.kboctopus.steer.geom.Vector2D;
 	
@@ -31,21 +36,22 @@ package com.kboctopus.fh.screen
 		private var _role:Role;
 		private var _gameOverPanel:GameOverPanel;
 		
-		private var _showBaffle:Vector.<Baffle> = new Vector.<Baffle>();
-		private var _poolBaffle:Vector.<Baffle> = new Vector.<Baffle>();
+		private var _mode:ClassicMode;
 		
 		private var _pdParticle:PDParticleSystem;
-		private var _score:Number;
-		
 		private var _ct:int;
 		
-		private var _flashgetsn:GetAndroidPhoneSn;
+//		private var _flashgetsn:GetAndroidPhoneSn;
 		private var _imei:String;
+		
+		
+//		private var adMobManager:AdMobManager;
+//		private var isShow:Boolean = false;
 		
 		public function PlayScreen(manager:IScreenManager)
 		{
-			this._flashgetsn = new GetAndroidPhoneSn();
-			this._imei = this._flashgetsn.getSn(1);
+//			this._flashgetsn = new GetAndroidPhoneSn();
+//			this._imei = this._flashgetsn.getSn(1);
 			super(manager);
 		}
 		
@@ -55,19 +61,12 @@ package com.kboctopus.fh.screen
 			this._pdParticle.stop();
 		}
 		
-		override public function reset():void
+		override public function reset(data:*):void
 		{
-			super.reset();
+			super.reset(data:*);
 			this._ct = 0;
-			this.score = 0;
-			var len:uint = this._showBaffle.length;
-			var b:Baffle;
-			while(len--)
-			{
-				b = this._showBaffle.pop();
-				this._baffleContainer.removeChild(b);
-				this._poolBaffle.push(b);
-			}
+			this._mode.score = 0;
+			this._mode.clean();
 			this._pdParticle.start();
 			if (this._gameOverPanel.parent != null)
 			{
@@ -89,18 +88,7 @@ package com.kboctopus.fh.screen
 		
 		private function _createBaffle():void
 		{
-			var baffle:Baffle;
-			if (this._poolBaffle.length>0)
-			{
-				baffle = this._poolBaffle.pop();
-			}
-			else
-			{
-				baffle = new Baffle();
-			}
-			baffle.reset();
-			this._baffleContainer.addChild(baffle);
-			this._showBaffle.push(baffle);
+			this._mode.create();
 		}		
 		
 		override protected function initUI():void
@@ -136,18 +124,38 @@ package com.kboctopus.fh.screen
 			this._gameOverPanel.returnHandler = this.returnHandler;
 			
 			tf = new TextField(400, 60, "0", "Verdana", 30, 0xff000000);
-			tf.text = this._imei;
+			
 			this._showContainer.addChild(tf);
-		}
-		
-		private function _testTouch(e:TouchEvent) : void
-		{
-			var touch:Touch = e.getTouch(tf, TouchPhase.BEGAN);
-			if (touch != null)
-			{
-				this._speed+=0.3;
-				tf.text = this._speed.toString();
-			}
+			
+			_mode = new ClassicMode(this._baffleContainer, this._role);
+			
+//			adMobManager = AdMobManager.manager;
+//			tf.text = adMobManager.isSupported.toString();
+//			if(adMobManager.isSupported){
+//				adMobManager.verbose = true;
+//				adMobManager.operationMode = AdMobManager.TEST_MODE;
+//				
+//				adMobManager.bannersAdMobId = "ca-app-pub-1069429310304368/4278640937";
+////				adMobManager.bannersAdMobId = "a152834c2b8cce6";
+//				
+////				adMobManager.gender = AdMobManager.GENDER_MALE;
+////				adMobManager.birthYear = 1996;
+////				adMobManager.birthMonth = 1;
+////				adMobManager.birthDay = 24;
+////				adMobManager.isCDT = true;
+//				adMobManager.createBanner(AdMobSize.BANNER,AdMobPosition.TOP_CENTER,"BottomBanner1", null, true);
+//				
+//				adMobManager.showInterstitial();
+//				adMobManager.showAllBanner();
+//				
+//				tf.text = "showAllBanner";
+//			}		
+			
+//			var admob:Admob= Admob.getInstance();
+//			if(admob.supportDevice){
+//				admob.setKeys("ca-app-pub-1069429310304368/4278640937");
+//				admob.showBanner(Admob.BANNER,AdmobPosition.TOP_CENTER);
+//			}
 		}
 		
 		
@@ -169,17 +177,16 @@ package com.kboctopus.fh.screen
 		{
 			removeEvents();
 			this._pdParticle.stop();
-			this._gameOverPanel.setScore(this._score);
+			this._gameOverPanel.setScore(this._mode.score);
 			this._winContainer.addChild(this._gameOverPanel);
 		}
 		
 		
-		private var _speed:Number = 3;
 		private var tf:TextField;
 		private function _onUpdateHandler(e:Event) : void
 		{
 			_ct++;
-			if (_ct >= 100)
+			if (_ct >= this._mode.rate)
 			{
 				_ct = 0;
 				_createBaffle();
@@ -196,29 +203,10 @@ package com.kboctopus.fh.screen
 				this._role.x -= ConstGame.GAME_W;
 			}
 			
-			// check hit
-			for each(var b:Baffle in this._showBaffle)
+			if (this._mode.checkOver())
 			{
-				if (b.hitRole(this._role))
-				{
-					this.gameOver();
-					return;
-				}
-				
-				b.move(_speed);
-				if (b.out())
-				{
-					this.score = this._score + 1;
-					this._baffleContainer.removeChild(b);
-					this._poolBaffle.push(this._showBaffle.shift());
-				}
+				this.gameOver();
 			}
-		}
-
-		private function set score(value:Number):void
-		{
-			_score = value;
-//			this.tf.text = this._score.toString();
 		}
 
 	}
