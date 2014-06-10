@@ -13,27 +13,20 @@ package com.kboctopus.fh.component
 	{
 		private var _bg:Image;
 		private var _clickHandler:Function;
+		private var _clickAble:Boolean = false;
 		
 		public function MyButton(tex:String, click:Function)
 		{
 			this._clickHandler = click;
 			_initUI(tex);
-			_initEvent();
 		}
 		
 		
 		private function _initUI(tex:String) : void
 		{
-			this._bg = new Image(AssetTool.ins().getAtlas("temp").getTexture(tex));
+			this._bg = new Image(AssetTool.ins().getAtlas("ui").getTexture(tex));
 			this.addChild(this._bg);
 		}
-		
-		
-		private function _initEvent() : void
-		{
-			this.addEventListener(TouchEvent.TOUCH, _onTouchHandler);
-		}
-		
 		
 		private function _onTouchHandler(e:TouchEvent) : void
 		{
@@ -51,5 +44,23 @@ package com.kboctopus.fh.component
 				_clickHandler(this);
 			}
 		}
+
+		public function set clickAble(value:Boolean):void
+		{
+			if (_clickAble == value)
+			{
+				return;
+			}
+			_clickAble = value;
+			if (_clickAble)
+			{
+				this.addEventListener(TouchEvent.TOUCH, _onTouchHandler);
+			}
+			else
+			{
+				this.removeEventListener(TouchEvent.TOUCH, _onTouchHandler);
+			}
+		}
+
 	}
 }

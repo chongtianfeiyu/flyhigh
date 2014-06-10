@@ -37,9 +37,9 @@ package com.kboctopus.fh.component
 		
 		private function _initUI() : void
 		{
-			this._midTexture = AssetTool.ins().getAtlas("temp").getTexture("7_1");
-			this._leftTexture = AssetTool.ins().getAtlas("temp").getTexture("7_2");
-			this._rightTexture = AssetTool.ins().getAtlas("temp").getTexture("7_3");
+			this._midTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus");
+			this._leftTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus_left");
+			this._rightTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus_right");
 			this._icon = new Image(this._midTexture);
 			this.addChild(this._icon);
 		}
@@ -54,6 +54,7 @@ package com.kboctopus.fh.component
 				this._force = this._force.add(args[i]);
 			}
 		}
+		
 		
 		
 		public function setForceDic(v:Number) : void
@@ -75,10 +76,27 @@ package com.kboctopus.fh.component
 		
 		public function move() : void
 		{
+			if (this._ct<0)
+			{
+				this._ct++;
+				if (this._ct == 0)
+				{
+					this._force.x = 0;
+				}
+				return;
+			}
 			this._velocity = this._velocity.add(this._force.divide(this._mass));
 			this._force = new Vector2D();
 			this._velocity.truncate(this._maxSpeed);
 			this.position = this._position.add(this._velocity);
+		}
+		
+		
+		private var _ct:int = 0;
+		public function hurt(demage:int) : void
+		{
+			this._velocity.x = this._velocity.y = 0;
+			this._ct += demage*20;
 		}
 		
 		

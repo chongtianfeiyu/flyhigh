@@ -12,7 +12,6 @@ package com.kboctopus.fh.tools
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.textures.Texture;
-	import starling.textures.TextureAtlas;
 	import starling.utils.AssetManager;
 
 	public class AssetTool
@@ -73,7 +72,7 @@ package com.kboctopus.fh.tools
 			switch (this._type)
 			{
 				case TYPE_IMG:
-					this._atlasDic[this._tmpName] = new TextureAtlas(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data));
+					this._atlasDic[this._tmpName] = new MyTextureAtlas(this._ldr.content as Bitmap, XML(this._uldr.data));
 					break;
 				case TYPE_FONT:
 					TextField.registerBitmapFont(new BitmapFont(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data)), this._tmpName);
@@ -96,9 +95,9 @@ package com.kboctopus.fh.tools
 		}
 		
 		
-		public function getAtlas(name:String) : TextureAtlas
+		public function getAtlas(name:String) : MyTextureAtlas
 		{
-			return this._atlasDic[name] as TextureAtlas;
+			return (this._atlasDic[name] as MyTextureAtlas);
 		}
 		
 		

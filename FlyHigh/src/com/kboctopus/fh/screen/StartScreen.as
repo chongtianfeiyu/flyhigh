@@ -14,6 +14,7 @@ package com.kboctopus.fh.screen
 	
 	import starling.display.Button;
 	import starling.display.Image;
+	import starling.display.QuadBatch;
 	import starling.events.Event;
 	import starling.textures.Texture;
 
@@ -21,87 +22,65 @@ package com.kboctopus.fh.screen
 	{
 		private var _classicBtn:MyButton;
 		private var _zenBtn:MyButton;
-		
-		// temp
-		private var _shareQQ:Button;
-		private var _shareSina:Button;
-		private var testBa:ByteArray;
-		private var _ldr:URLLoader;
+		private var _head:Image;
+		private var _top:QuadBatch;
+		private var _bottom:QuadBatch;
 		
 		public function StartScreen(manager:IScreenManager)
 		{
 			super(manager);
-			
-			/**初始化腾讯平台服务*/
-//			ServiceManager.ins().initConfig(ServiceType.TENCENT, "", "801386256", "6fa520a3c9b35b3a1fc16f117ae7a9a0", "http://www.sharesdk.cn");
-//			ServiceManager.ins().initConfig(ServiceType.SINA, "", "3912828254", "1c72050a8b871cb46a1759dc5c77fa63",  "https://api.weibo.com/oauth2/default.html");
+		}
+		
+		
+		override public function destroy():void
+		{
+			super.destroy();
+			this._classicBtn.clickAble = this._zenBtn.clickAble = false;
+		}
+		
+		override public function reset(data:*):void
+		{
+			super.reset(data);
+			this._classicBtn.clickAble = this._zenBtn.clickAble = true;
 		}
 		
 		
 		override protected function initUI():void 
 		{
+			//init img 
+			var hua:Image = new Image(AssetTool.ins().getAtlas("ui").getTexture("hua"));
+			this._top = new QuadBatch();
+			var w:Number = hua.width;
+			this._top.addImage(hua);
+			while(this._top.width < ConstGame.GAME_W)
+			{
+				hua.x += w-1;
+				this._top.addImage(hua);
+			}
+			this._top.y = 80-hua.height;
+			
+			this._bottom = this._top.clone();
+			this._bottom.scaleY = -1;
+			this._bottom.y = ConstGame.GAME_H-80+this._bottom.height;
+			
+			this.addChild(this._top);
+			this.addChild(this._bottom);
+			
+			this._head = new Image(AssetTool.ins().getAtlas("ui").getTexture("head"));
+			this.addChild(this._head);
+			this._head.x = (ConstGame.GAME_W-this._head.width)>>1;
+			
 			// init btn
-			this._classicBtn = new MyButton("0_1", _onClassicHandler);
+			this._classicBtn = new MyButton("btn_classic", _onClassicHandler);
 			this.addChild(this._classicBtn);
-			this._zenBtn = new MyButton("0_2", _onZenHandler);
+			this._zenBtn = new MyButton("btn_zen", _onZenHandler);
 			this.addChild(this._zenBtn);
 			
 			this._zenBtn.x = this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
-			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._zenBtn.height+50))>>1) - 50;
-			this._classicBtn.y = startY;
-			this._zenBtn.y = startY + this._classicBtn.height + 50;
-			
-			// temp
-			this._shareQQ = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_2"));
-			this._shareQQ.x = 20;
-			this._shareQQ.y = 20;
-			this.addChild(this._shareQQ);
-			this._shareSina = new Button(AssetTool.ins().getAtlas("temp").getTexture("1_3"));
-			this._shareSina.x = 20;
-			this._shareSina.y = 110;
-			this.addChild(this._shareSina);
-			_ldr = new URLLoader();
-			_ldr.dataFormat = URLLoaderDataFormat.BINARY;
-			_ldr.addEventListener(flash.events.Event.COMPLETE, loadComplete);
-			_ldr.load(new URLRequest("assets/ui/temp.png"));
-		}
-		
-				
-		override protected function initEvents():void
-		{
-			// temp
-			this._shareQQ.addEventListener(starling.events.Event.TRIGGERED, _shareQQHandler);
-			this._shareSina.addEventListener(starling.events.Event.TRIGGERED, _shareSinaHandler);
-		}
-		
-		
-		override protected function removeEvents():void
-		{
-			// temp
-			this._shareQQ.removeEventListener(starling.events.Event.TRIGGERED, _shareQQHandler);
-			this._shareSina.removeEventListener(starling.events.Event.TRIGGERED, _shareSinaHandler);
-		}
-		
-		// temp
-		private function _shareQQHandler(e:starling.events.Event) : void
-		{
-//			ServiceManager.ins().authAndShare(ServiceType.TENCENT, "黑色的一片", testBa, shareBack, shareError);
-		}
-		private function _shareSinaHandler(e:starling.events.Event) : void
-		{
-//			ServiceManager.ins().authAndShare(ServiceType.SINA, "黑色的一片", testBa, shareBack, shareError);
-		}
-		private function shareBack(result:String):void
-		{
-			trace("shareBack:" + result);
-		}
-		private function shareError(result:String):void
-		{
-			trace("shareError:" + result);
-		}
-		protected function loadComplete(event:flash.events.Event):void
-		{
-			this.testBa = this._ldr.data;
+			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._zenBtn.height+30+this._head.height+50))>>1) - 50;
+			this._head.y = startY;
+			this._classicBtn.y = this._head.y + this._head.height + 50;
+			this._zenBtn.y = this._classicBtn.y + this._classicBtn.height + 30;
 		}
 		
 		private function _onClassicHandler(v:MyButton) : void

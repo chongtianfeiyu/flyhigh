@@ -3,43 +3,83 @@ package com.kboctopus.fh.component
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.tools.AssetTool;
 	
+	import flash.geom.Point;
+	
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.QuadBatch;
 	import starling.display.Sprite;
 	
 	public class Baffle extends Sprite
 	{
-		private var qbWidth:Number = 0;
+		private var uint:QuadBatch;
+		
+		private static var qbWidth:Number = 0;
+		private static var hasInit:Boolean = false;
+		private static var points:Array = [];
 		
 		public function Baffle()
 		{
 			_initUI();
 		}
 		
+		private static function initStatic(wid:Number, minW:Number) : void
+		{
+			hasInit = true;
+			
+			qbWidth = wid;
+			var point:Point = new Point(qbWidth, 8);
+			points.push(point);
+			point = new Point(qbWidth, 72);
+			points.push(point);
+			point = new Point(qbWidth+120, 8);
+			points.push(point);
+			point = new Point(qbWidth+120, 72);
+			points.push(point);
+			point = new Point(qbWidth, 40);
+			points.push(point);
+			point = new Point(qbWidth+120, 40);
+			points.push(point);
+			var num:int = wid/minW;
+			var x1:Number = minW*.5;
+			point = new Point(qbWidth-x1, 80);
+			points.push(point);
+			point = new Point(qbWidth+120+x1, 80);
+			points.push(point);
+			while(num--)
+			{
+				x1 += minW;
+				point = new Point(qbWidth-x1, 80);
+				points.push(point);
+				point = new Point(qbWidth+120+x1, 80);
+				points.push(point);
+			}
+		}
+		
 		
 		private function _initUI() : void
 		{
-			var qb:QuadBatch = new QuadBatch();
-			var img:Image = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_1"));
-			qb.addImage(img);
+			uint = new QuadBatch();
+			var img:Image = new Image(AssetTool.ins().getAtlas("ui").getTexture("baffle_unit"));
+			uint.addImage(img);
 			
-			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_2"));
-			while (qb.width<ConstGame.GAME_W)
+			while (uint.width<ConstGame.GAME_W)
 			{
-				img.x = qb.width;
-				qb.addImage(img);
+				img.x = uint.width-1;
+				uint.addImage(img);
 			}
 			
-			img = new Image(AssetTool.ins().getAtlas("temp").getTexture("5_3"));
-			img.x = qb.width;
-			qb.addImage(img);
+			if (!hasInit)
+			{
+				initStatic(uint.width, img.width-1);
+			}
 			
-			qbWidth = qb.width;
 			var qb2:QuadBatch = new QuadBatch();
 			this.addChild(qb2);
-			qb2.addQuadBatch(qb);
-			qb.x = qbWidth + 120;
-			qb2.addQuadBatch(qb);
+			uint.x = 0;
+			qb2.addQuadBatch(uint);
+			uint.x = qbWidth + 120;
+			qb2.addQuadBatch(uint);
 			
 			this.touchable = false;
 		}
@@ -61,26 +101,24 @@ package com.kboctopus.fh.component
 		
 		public function out() : Boolean
 		{
-			return (this.y>=ConstGame.GAME_H-160);
+			return (this.y>=ConstGame.GAME_H);
 		}
 		
 		
 		public function hitRole(role:Role) : Boolean
 		{
-			if (this.y+80 < role.y)
+			for each(var point:Point in points)
 			{
-				return false;
+				var lx:Number = this.x + point.x;
+				var ly:Number = this.y + point.y;
+				var dx:Number = lx - (role.x+25);
+				var dy:Number = ly - (role.y+22);
+				if (dx*dx + dy*dy < 530)
+				{
+					return true;
+				}
 			}
-			if (this.y > role.y+40)
-			{
-				return false;
-			}
-			var disX:Number = role.x-this.x;
-			if (disX>=qbWidth && disX<=qbWidth+80)
-			{
-				return false;
-			}
-			return true;
+			return false;
 		}
 	}
 }

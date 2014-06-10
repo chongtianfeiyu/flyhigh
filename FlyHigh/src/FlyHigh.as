@@ -4,6 +4,8 @@ package
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.tools.AssetTool;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -34,7 +36,6 @@ package
 			this.mouseEnabled = this.mouseChildren = false;
 			this.loaderInfo.addEventListener(flash.events.Event.COMPLETE, _loaderInfo_completeHandler);
 		}
-		
 		
 		private function _showLaunchImg() : void
 		{
@@ -73,6 +74,7 @@ package
 		
 		private function _loaderInfo_completeHandler(event:flash.events.Event):void
 		{
+			this.loaderInfo.removeEventListener(flash.events.Event.COMPLETE, _loaderInfo_completeHandler);
 			ConstGame.GAME_W = this.stage.stageWidth;
 			ConstGame.GAME_H = this.stage.stageHeight;
 			
@@ -104,7 +106,7 @@ package
 		
 		private function _onRootCreated(e:starling.events.Event, game:Game):void
 		{
-			AssetTool.ins().initTexture("assets/ui/temp", "temp", loadFont);
+			AssetTool.ins().initTexture("assets/ui/ui", "ui", loadFont);
 			
 			function loadFont() : void
 			{
