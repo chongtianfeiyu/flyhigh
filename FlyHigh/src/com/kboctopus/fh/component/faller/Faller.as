@@ -15,7 +15,7 @@ package com.kboctopus.fh.component.faller
 	
 	public class Faller extends Sprite
 	{
-		private static var rect:Rectangle = new Rectangle();
+		public static var rect:Rectangle = new Rectangle();
 		private static var m:Matrix = new Matrix();
 		protected var icon:Image;
 		

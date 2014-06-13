@@ -19,6 +19,7 @@ package com.kboctopus.fh.screen
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.extensions.PDParticleSystem;
 	import starling.text.TextField;
 
 	public class PlayScreen extends BaseScreen
@@ -36,6 +37,9 @@ package com.kboctopus.fh.screen
 		
 		private var _ct:int;
 		
+		private var _gPS:PDParticleSystem;
+		private var _bPS:PDParticleSystem;
+		
 		public function PlayScreen(manager:IScreenManager)
 		{
 			super(manager);
@@ -50,7 +54,7 @@ package com.kboctopus.fh.screen
 		{
 			this._ct = 0;
 			
-			if (data=="zen")
+			if (data.mode=="zen")
 			{
 				this._mode = this._zen;
 			}
@@ -58,6 +62,7 @@ package com.kboctopus.fh.screen
 			{
 				this._mode = this._classic;
 			}
+			this._mode.level = data.level;
 			this._mode.score = 0;
 			super.reset(data);
 		}
@@ -91,8 +96,16 @@ package com.kboctopus.fh.screen
 			
 			this._showContainer.addChild(tf);
 			
+			this._gPS = AssetTool.ins().getParticle("g");
+			this._bPS = AssetTool.ins().getParticle("b");
+			Starling.juggler.add(this._gPS);
+			Starling.juggler.add(this._bPS);
+			this.addChild(this._gPS);
+			this.addChild(this._bPS);
+			
 			_zen = new ZenMode(this._baffleContainer, this._role);
 			_classic = new ClassicMode(this._baffleContainer, this._role);
+			_classic.setParticles(this._bPS, this._gPS);
 		}
 		
 		

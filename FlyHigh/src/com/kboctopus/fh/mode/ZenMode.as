@@ -4,6 +4,7 @@ package com.kboctopus.fh.mode
 	import com.kboctopus.fh.component.Role;
 	
 	import starling.display.Sprite;
+	import starling.extensions.PDParticleSystem;
 
 	public class ZenMode implements IPlayMode
 	{
@@ -17,12 +18,18 @@ package com.kboctopus.fh.mode
 		private var _score:int;
 		private var _rate:int = 100;
 		
+		private var _level:int;
+		
 		public function ZenMode(container:Sprite, role:Role)
 		{
 			this._container = container;
 			this._role = role;
 		}
 		
+		
+		public function setParticles(b:PDParticleSystem, g:PDParticleSystem) : void
+		{
+		}
 		
 		public function clean() : void
 		{
@@ -91,6 +98,16 @@ package com.kboctopus.fh.mode
 		private function set rate(value:int):void
 		{
 			_rate = value;
+		}
+		
+		
+		public function get level():int
+		{
+			return _level;
+		}
+		public function set level(value:int):void
+		{
+			_level = value;
 		}
 		
 	}

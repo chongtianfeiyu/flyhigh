@@ -237,8 +237,8 @@
 		of preventing you from debugging your application on your device-->
 			    <uses-permission android:name="android.permission.INTERNET"/>
 			    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-			    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE"/>-->
-			    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
+			    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+			    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 			    <!--The DISABLE_KEYGUARD and WAKE_LOCK permissions should be toggled together
 		in order to access AIR's SystemIdleMode APIs-->
 			    <!--<uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>-->
@@ -247,8 +247,8 @@
 			    <!--<uses-permission android:name="android.permission.RECORD_AUDIO"/>-->
 			    <!--The ACCESS_NETWORK_STATE and ACCESS_WIFI_STATE permissions should be toggled
 		together in order to use AIR's NetworkInfo APIs-->
-			    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
-			    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>-->
+			    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+			    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 			    <!--
 			    <application>
         			<activity android:name="com.kboctopus.sns.component.AuthActivity" />
@@ -257,6 +257,10 @@
 					<activity android:name="com.google.android.gms.ads.AdActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
     			</application>
     			-->
+    			
+    			<application>
+     				<activity android:name="com.baidu.mobads.AppActivity" android:configChanges="keyboard|keyboardHidden|orientation"/> 
+				</application>
 			</manifest>
 			
 		]]></manifestAdditions>
@@ -274,4 +278,11 @@
 
 
 
+<extensions>
+        
+        
+        <extensionID>so.cuo.platform.baidu</extensionID>
+        
+        
+    </extensions>
 </application>

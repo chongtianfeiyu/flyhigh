@@ -26,6 +26,8 @@ package com.kboctopus.fh.screen
 		private var _top:QuadBatch;
 		private var _bottom:QuadBatch;
 		
+		private var _playData:Object = {};
+		
 		public function StartScreen(manager:IScreenManager)
 		{
 			super(manager);
@@ -85,13 +87,17 @@ package com.kboctopus.fh.screen
 		
 		private function _onClassicHandler(v:MyButton) : void
 		{
-			this.screenManager.showScreen(ConstScreen.ID_PLAY, "classic");
+			_playData.mode = "classic";
+			_playData.level = ConstGame.LEVEL_NORMAL;
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, _playData);
 		}
 		
 		
 		private function _onZenHandler(v:MyButton) : void
 		{
-			this.screenManager.showScreen(ConstScreen.ID_PLAY, "zen");
+			_playData.mode = "zen";
+			_playData.level = ConstGame.LEVEL_HARD;
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, _playData);
 		}
 	}
 }

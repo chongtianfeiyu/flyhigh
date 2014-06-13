@@ -3,6 +3,7 @@ package
 	import com.kboctopus.fh.Game;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.tools.AssetTool;
+	import com.kboctopus.fh.tools.LocalSaver;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -110,12 +111,17 @@ package
 			
 			function loadFont() : void
 			{
-				AssetTool.ins().initFont("assets/font/en", "my_font", loadParticle);
+				AssetTool.ins().initFont("assets/font/en", "my_font", loadParticle1);
 			}
 			
-			function loadParticle() : void
+			function loadParticle1() : void
 			{
-				AssetTool.ins().initParticle("assets/particle/p1", "p1", gameStart);
+				AssetTool.ins().initParticle("assets/particle/b", "b", loadParticle2);
+			}
+			
+			function loadParticle2() : void
+			{
+				AssetTool.ins().initParticle("assets/particle/g", "g", gameStart);
 			}
 		
 			function gameStart() : void

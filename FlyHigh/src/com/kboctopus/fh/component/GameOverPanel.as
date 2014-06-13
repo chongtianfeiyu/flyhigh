@@ -1,6 +1,7 @@
 package com.kboctopus.fh.component
 {
 	import com.kboctopus.fh.tools.AssetTool;
+	import com.kboctopus.fh.tools.LocalSaver;
 	
 	import flash.net.SharedObject;
 	
@@ -19,13 +20,11 @@ package com.kboctopus.fh.component
 		private var _bestTF:TextField;
 		
 		private var _bestV:int;
-		private var _so:SharedObject;
 		private var _clickAble:Boolean = false;
 		
 		public function GameOverPanel()
 		{
-			this._so = SharedObject.getLocal("flyHigh");
-			_bestV = this._so.data.best;
+			_bestV = LocalSaver.ins().so.data.best;
 			_initUI();
 		}
 		
@@ -35,8 +34,8 @@ package com.kboctopus.fh.component
 			if (v > this._bestV)
 			{
 				this._bestV = v;
-				this._so.data.best = this._bestV;
-				this._so.flush();
+				LocalSaver.ins().so.data.best = this._bestV;
+				LocalSaver.ins().so.flush();
 			}
 			this._scoreTF.text = v.toString();
 			this._bestTF.text = this._bestV.toString();
