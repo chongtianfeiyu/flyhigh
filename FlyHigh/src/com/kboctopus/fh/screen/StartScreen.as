@@ -21,12 +21,11 @@ package com.kboctopus.fh.screen
 	public class StartScreen extends BaseScreen
 	{
 		private var _classicBtn:MyButton;
-		private var _zenBtn:MyButton;
+		private var _easyBtn:MyButton;
+		private var _hardBtn:MyButton;
 		private var _head:Image;
 		private var _top:QuadBatch;
 		private var _bottom:QuadBatch;
-		
-		private var _playData:Object = {};
 		
 		public function StartScreen(manager:IScreenManager)
 		{
@@ -37,13 +36,13 @@ package com.kboctopus.fh.screen
 		override public function destroy():void
 		{
 			super.destroy();
-			this._classicBtn.clickAble = this._zenBtn.clickAble = false;
+			this._classicBtn.clickAble = this._easyBtn.clickAble = this._hardBtn.clickAble = false;
 		}
 		
 		override public function reset(data:*):void
 		{
 			super.reset(data);
-			this._classicBtn.clickAble = this._zenBtn.clickAble = true;
+			this._classicBtn.clickAble = this._easyBtn.clickAble = this._hardBtn.clickAble = true;
 		}
 		
 		
@@ -75,29 +74,33 @@ package com.kboctopus.fh.screen
 			// init btn
 			this._classicBtn = new MyButton("btn_classic", _onClassicHandler);
 			this.addChild(this._classicBtn);
-			this._zenBtn = new MyButton("btn_zen", _onZenHandler);
-			this.addChild(this._zenBtn);
+			this._easyBtn = new MyButton("btn_easy", _onEasyHandler);
+			this.addChild(this._easyBtn);
+			this._hardBtn = new MyButton("btn_hard", _onHardHandler);
+			this.addChild(this._hardBtn);
 			
-			this._zenBtn.x = this._classicBtn.x = (ConstGame.GAME_W-this._classicBtn.width)>>1;
-			var startY:int = ((ConstGame.GAME_H - (this._classicBtn.height+this._zenBtn.height+30+this._head.height+50))>>1) - 50;
+			this._hardBtn.x = this._easyBtn.x = this._classicBtn.x = (ConstGame.GAME_W-200)>>1;
+			var startY:int = ((ConstGame.GAME_H - 540)>>1) -30;
 			this._head.y = startY;
-			this._classicBtn.y = this._head.y + this._head.height + 50;
-			this._zenBtn.y = this._classicBtn.y + this._classicBtn.height + 30;
+			this._easyBtn.y = this._head.y + 260;
+			this._hardBtn.y = this._easyBtn.y + 96;
+			this._classicBtn.y = this._hardBtn.y + 96;
 		}
 		
 		private function _onClassicHandler(v:MyButton) : void
 		{
-			_playData.mode = "classic";
-			_playData.level = ConstGame.LEVEL_NORMAL;
-			this.screenManager.showScreen(ConstScreen.ID_PLAY, _playData);
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, "classic");
 		}
 		
 		
-		private function _onZenHandler(v:MyButton) : void
+		private function _onEasyHandler(v:MyButton) : void
 		{
-			_playData.mode = "zen";
-			_playData.level = ConstGame.LEVEL_HARD;
-			this.screenManager.showScreen(ConstScreen.ID_PLAY, _playData);
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, "easy");
+		}
+		
+		private function _onHardHandler(v:MyButton) : void
+		{
+			this.screenManager.showScreen(ConstScreen.ID_PLAY, "hard");
 		}
 	}
 }

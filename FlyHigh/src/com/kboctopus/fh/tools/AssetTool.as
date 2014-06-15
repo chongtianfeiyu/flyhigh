@@ -8,7 +8,6 @@ package com.kboctopus.fh.tools
 	import flash.net.URLRequest;
 	import flash.utils.Dictionary;
 	
-	import starling.extensions.PDParticleSystem;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
 	import starling.textures.Texture;
@@ -18,7 +17,6 @@ package com.kboctopus.fh.tools
 	{
 		private static const TYPE_IMG:int = 0;
 		private static const TYPE_FONT:int = 1;
-		private static const TYPE_PARTICLE:int = 2;
 		
 		private var _assetManager:AssetManager;
 		private var _ldr:Loader;
@@ -60,9 +58,6 @@ package com.kboctopus.fh.tools
 				case TYPE_FONT:
 					this._uldr.load(new URLRequest(this._path+".fnt"));
 					break;
-				case TYPE_PARTICLE:
-					this._uldr.load(new URLRequest(this._path+".pex"));
-					break;
 			}
 		}		
 		
@@ -76,9 +71,6 @@ package com.kboctopus.fh.tools
 					break;
 				case TYPE_FONT:
 					TextField.registerBitmapFont(new BitmapFont(Texture.fromBitmap(this._ldr.content as Bitmap), XML(this._uldr.data)), this._tmpName);
-					break;
-				case TYPE_PARTICLE:
-					this._particleDic[this._tmpName] = new PDParticleSystem(XML(this._uldr.data), Texture.fromBitmap(this._ldr.content as Bitmap));
 					break;
 			}
 			this._callback();
@@ -101,12 +93,6 @@ package com.kboctopus.fh.tools
 		}
 		
 		
-		public function getParticle(name:String) : PDParticleSystem
-		{
-			return this._particleDic[name] as PDParticleSystem;
-		}
-		
-		
 		public function initTexture(path:String, name:String, callback:Function) : void
 		{
 			this._type = TYPE_IMG;
@@ -117,13 +103,6 @@ package com.kboctopus.fh.tools
 		public function initFont(path:String, name:String, callback:Function) : void
 		{
 			this._type = TYPE_FONT;
-			_loadSource(path, name, callback);
-		}
-		
-		
-		public function initParticle(path:String, name:String, callback:Function) : void
-		{
-			this._type = TYPE_PARTICLE;
 			_loadSource(path, name, callback);
 		}
 		

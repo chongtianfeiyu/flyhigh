@@ -34,6 +34,8 @@ package
 		{
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			ConstGame.LANG = (Capabilities.language.substr(0, 2) == "zh") ? "zh" : "en";
+				
 			this.mouseEnabled = this.mouseChildren = false;
 			this.loaderInfo.addEventListener(flash.events.Event.COMPLETE, _loaderInfo_completeHandler);
 		}
@@ -42,7 +44,7 @@ package
 		{
 			_launchImg = new Loader();
 			_launchImg.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, _loadLaunchComplete);
-			_launchImg.load(new URLRequest("assets/ui/launch.png"));
+			_launchImg.load(new URLRequest("assets/ui/kboctopus_logo.png"));
 		}
 		
 		
@@ -50,14 +52,14 @@ package
 		{
 			_launchImg.contentLoaderInfo.removeEventListener(flash.events.Event.COMPLETE, _loadLaunchComplete);
 			this._launchImg.x = (ConstGame.GAME_W-this._launchImg.width)>>1;
-			this._launchImg.y = (ConstGame.GAME_H-this._launchImg.height)>>1;
+			this._launchImg.y = ((ConstGame.GAME_H-this._launchImg.height)>>1)-50;
 			this._launchBG = new Sprite();
 			this.addChild(this._launchBG);
 			this._launchBG.graphics.beginFill(0xffffff);
 			this._launchBG.graphics.drawRect(0, 0, ConstGame.GAME_W, ConstGame.GAME_H);
 			this._launchBG.graphics.endFill();
 			this._launchBG.addChild(this._launchImg);
-			this._launchInterval = flash.utils.setInterval(_clearLaunchImg, 1000);
+			this._launchInterval = flash.utils.setInterval(_clearLaunchImg, 2000);
 		}		
 		
 		private function _clearLaunchImg() : void
@@ -107,23 +109,13 @@ package
 		
 		private function _onRootCreated(e:starling.events.Event, game:Game):void
 		{
-			AssetTool.ins().initTexture("assets/ui/ui", "ui", loadFont);
+			AssetTool.ins().initTexture("assets/ui/ui_"+ConstGame.LANG, "ui", loadFont);
 			
 			function loadFont() : void
 			{
-				AssetTool.ins().initFont("assets/font/en", "my_font", loadParticle1);
+				AssetTool.ins().initFont("assets/font/num", "my_font", gameStart);
 			}
 			
-			function loadParticle1() : void
-			{
-				AssetTool.ins().initParticle("assets/particle/b", "b", loadParticle2);
-			}
-			
-			function loadParticle2() : void
-			{
-				AssetTool.ins().initParticle("assets/particle/g", "g", gameStart);
-			}
-		
 			function gameStart() : void
 			{
 				game.start();

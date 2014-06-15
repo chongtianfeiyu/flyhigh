@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:1f613127e7dea0babd3f261052a0f1de$ -->
+<TextureAtlas imagePath="ui_en.png">
+    <SubTexture name="b1" x="304" y="587" width="60" height="60"/>
+    <SubTexture name="b2" x="466" y="506" width="44" height="70"/>
+    <SubTexture name="b3" x="465" y="760" width="41" height="70"/>
+    <SubTexture name="baffle_unit" x="465" y="678" width="45" height="80"/>
+    <SubTexture name="btn_billboard" x="366" y="628" width="120" height="48"/>
+    <SubTexture name="btn_classic" x="116" y="931" width="200" height="76"/>
+    <SubTexture name="btn_easy" x="263" y="781" width="200" height="76"/>
+    <SubTexture name="btn_hard" x="263" y="703" width="200" height="76"/>
+    <SubTexture name="btn_return" x="370" y="578" width="120" height="48"/>
+    <SubTexture name="control" x="2" y="2" width="480" height="170"/>
+    <SubTexture name="control_left" x="59" y="839" width="55" height="170"/>
+    <SubTexture name="control_right" x="2" y="839" width="55" height="170"/>
+    <SubTexture name="g1" x="204" y="618" width="60" height="57"/>
+    <SubTexture name="g2" x="266" y="649" width="60" height="52"/>
+    <SubTexture name="g3" x="204" y="793" width="55" height="60"/>
+    <SubTexture name="g4" x="404" y="506" width="60" height="60"/>
+    <SubTexture name="g5" x="404" y="174" width="70" height="50"/>
+    <SubTexture name="head" x="2" y="618" width="200" height="219"/>
+    <SubTexture name="hua" x="204" y="677" width="57" height="114"/>
+    <SubTexture name="octopus" x="220" y="859" width="50" height="44"/>
+    <SubTexture name="octopus_cry" x="116" y="885" width="50" height="44"/>
+    <SubTexture name="octopus_left" x="168" y="855" width="50" height="44"/>
+    <SubTexture name="octopus_right" x="116" y="839" width="50" height="44"/>
+    <SubTexture name="over" x="2" y="174" width="400" height="380"/>
+    <SubTexture name="progress_bg" x="2" y="587" width="300" height="29"/>
+    <SubTexture name="progress_core" x="2" y="556" width="366" height="29"/>
+    <SubTexture name="share_facebook" x="404" y="436" width="68" height="68"/>
+    <SubTexture name="share_sina" x="404" y="366" width="68" height="68"/>
+    <SubTexture name="share_tencent" x="404" y="296" width="68" height="68"/>
+    <SubTexture name="share_weixin" x="404" y="226" width="68" height="68"/>
+</TextureAtlas>

@@ -59,7 +59,7 @@ package com.kboctopus.fh.component
 				imgRight.x = beginX;
 				this._bg.addImage(imgRight);
 				
-				imgLeft.x = -beginX;
+				imgLeft.x = -beginX-55;
 				this._bg.addImage(imgLeft);
 				
 				beginX+=55;

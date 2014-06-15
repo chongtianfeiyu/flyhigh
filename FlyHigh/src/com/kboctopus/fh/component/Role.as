@@ -24,6 +24,7 @@ package com.kboctopus.fh.component
 		private var _midTexture:Texture;
 		private var _leftTexture:Texture;
 		private var _rightTexture:Texture;
+		private var _cryTexture:Texture;
 		
 		public function Role()
 		{
@@ -40,6 +41,7 @@ package com.kboctopus.fh.component
 			this._midTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus");
 			this._leftTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus_left");
 			this._rightTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus_right");
+			this._cryTexture = AssetTool.ins().getAtlas("ui").getTexture("octopus_cry");
 			this._icon = new Image(this._midTexture);
 			this.addChild(this._icon);
 		}
@@ -61,15 +63,15 @@ package com.kboctopus.fh.component
 		{
 			if (v == 0)
 			{
-				dic = 0;
+				dic = DIC_MID;
 			}
 			else if (v < 0)
 			{
-				dic = 1;
+				dic = DIC_LEFT;
 			}
 			else
 			{
-				dic = 2;
+				dic = DIC_RIGHT;
 			}
 		}
 		
@@ -79,9 +81,11 @@ package com.kboctopus.fh.component
 			if (this._ct<0)
 			{
 				this._ct++;
-				if (this._ct == 0)
+				if (this._ct >= 0)
 				{
 					this._force.x = 0;
+					this._icon.texture = this._midTexture;
+					this._icon.readjustSize();
 				}
 				return;
 			}
@@ -97,6 +101,8 @@ package com.kboctopus.fh.component
 		{
 			this._velocity.x = this._velocity.y = 0;
 			this._ct += demage*20;
+			this._icon.texture = this._cryTexture;
+			this._icon.readjustSize();
 		}
 		
 		
@@ -127,6 +133,10 @@ package com.kboctopus.fh.component
 
 		private function set dic(value:int):void
 		{
+			if (this._ct < 0)
+			{
+				return;
+			}
 			if (value == _dic)
 			{
 				return;

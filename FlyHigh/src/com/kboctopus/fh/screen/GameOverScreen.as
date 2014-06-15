@@ -13,8 +13,6 @@ package com.kboctopus.fh.screen
 	{
 		private var _panel:GameOverPanel;
 		
-		private var _tText:TextField;
-		
 		public function GameOverScreen(manager:IScreenManager)
 		{
 			super(manager);
@@ -23,15 +21,10 @@ package com.kboctopus.fh.screen
 		override protected function initUI():void
 		{
 			this._panel = new GameOverPanel();
-			this._panel.y = ((ConstGame.GAME_H - this._panel.height)>>1)-100;
+			this._panel.y = ((ConstGame.GAME_H - this._panel.height)>>1)-50;
 			this._panel.x = ((ConstGame.GAME_W - this._panel.width)>>1)+10;
 			this.addChild(this._panel);
 			this._panel.againHandler = _again;
-			
-			_tText = new TextField(480, 400, "");
-			this.addChild(this._tText);
-			
-			_tText.text = BaiDu.getInstance().supportDevice.toString();
 			
 			BaiDu.getInstance().setKeys("debug","debug");
 		}
@@ -46,7 +39,7 @@ package com.kboctopus.fh.screen
 		
 		override public function reset(data:*):void
 		{
-			this._panel.setScore(data);
+			this._panel.setResult(data);
 			this._panel.clickAble = true;
 			BaiDu.getInstance().showBanner(BaiDu.BANNER,RelationPosition.BOTTOM_CENTER);
 		}

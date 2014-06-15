@@ -7,9 +7,11 @@ package com.kboctopus.fh.screen
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
 	import com.kboctopus.fh.mode.ClassicMode;
+	import com.kboctopus.fh.mode.EasyMode;
+	import com.kboctopus.fh.mode.HardMode;
 	import com.kboctopus.fh.mode.IPlayMode;
-	import com.kboctopus.fh.mode.ZenMode;
 	import com.kboctopus.fh.tools.AssetTool;
+	import com.kboctopus.fh.tools.StaticPool;
 	import com.kboctopus.steer.geom.Vector2D;
 	
 	import starling.core.Starling;
@@ -19,8 +21,6 @@ package com.kboctopus.fh.screen
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.extensions.PDParticleSystem;
-	import starling.text.TextField;
 
 	public class PlayScreen extends BaseScreen
 	{
@@ -32,13 +32,11 @@ package com.kboctopus.fh.screen
 		private var _role:Role;
 		
 		private var _mode:IPlayMode;
-		private var _zen:ZenMode;
+		private var _hard:HardMode;
 		private var _classic:ClassicMode;
+		private var _easy:EasyMode;
 		
 		private var _ct:int;
-		
-		private var _gPS:PDParticleSystem;
-		private var _bPS:PDParticleSystem;
 		
 		public function PlayScreen(manager:IScreenManager)
 		{
@@ -54,15 +52,19 @@ package com.kboctopus.fh.screen
 		{
 			this._ct = 0;
 			
-			if (data.mode=="zen")
+			if (data=="easy")
 			{
-				this._mode = this._zen;
+				this._mode = this._easy;
 			}
-			else
+			else if (data=="classic")
 			{
 				this._mode = this._classic;
 			}
-			this._mode.level = data.level;
+			else
+			{
+				this._mode = this._hard;
+			}
+			this._mode.reset();
 			this._mode.score = 0;
 			super.reset(data);
 		}
@@ -92,20 +94,11 @@ package com.kboctopus.fh.screen
 			this._touchPanel.x = ConstGame.GAME_W>>1;
 			this._showContainer.addChild(this._touchPanel);
 			
-			tf = new TextField(400, 60, "0", "Verdana", 30, 0xff000000);
-			
-			this._showContainer.addChild(tf);
-			
-			this._gPS = AssetTool.ins().getParticle("g");
-			this._bPS = AssetTool.ins().getParticle("b");
-			Starling.juggler.add(this._gPS);
-			Starling.juggler.add(this._bPS);
-			this.addChild(this._gPS);
-			this.addChild(this._bPS);
-			
-			_zen = new ZenMode(this._baffleContainer, this._role);
+			_hard = new HardMode(this._baffleContainer, this._role);
+			_easy = new EasyMode(this._baffleContainer, this._role);
 			_classic = new ClassicMode(this._baffleContainer, this._role);
-			_classic.setParticles(this._bPS, this._gPS);
+			
+			StaticPool.pushItem(new Baffle());
 		}
 		
 		
@@ -126,12 +119,11 @@ package com.kboctopus.fh.screen
 		public function gameOver():void
 		{
 			removeEvents();
-			this.screenManager.showScreen(ConstScreen.ID_GAME_OVER, this._mode.score);
+			this.screenManager.showScreen(ConstScreen.ID_GAME_OVER, this._mode);
 			this._mode.clean();
 		}
 		
 		
-		private var tf:TextField;
 		private function _onUpdateHandler(e:Event) : void
 		{
 			if (this._mode == null)
@@ -148,13 +140,7 @@ package com.kboctopus.fh.screen
 			this._role.applyForces(this._touchPanel.force);
 			this._role.move();
 
-			if (this._role.x < 0)
-			{
-				this._role.x += ConstGame.GAME_W;
-			} else if (this._role.x > ConstGame.GAME_W)
-			{
-				this._role.x -= ConstGame.GAME_W;
-			}
+			this._mode.checkRole();
 			
 			if (this._mode.checkOver())
 			{

@@ -1,6 +1,8 @@
 package com.kboctopus.fh.mode
 {
+	import com.kboctopus.fh.component.ProgressBar;
 	import com.kboctopus.fh.component.Role;
+	import com.kboctopus.fh.component.ScoreSP;
 	import com.kboctopus.fh.component.faller.*;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.tools.StaticPool;
@@ -8,7 +10,6 @@ package com.kboctopus.fh.mode
 	import flash.display.BitmapData;
 	
 	import starling.display.Sprite;
-	import starling.extensions.PDParticleSystem;
 
 	public class ClassicMode implements IPlayMode
 	{
@@ -18,26 +19,28 @@ package com.kboctopus.fh.mode
 		private var _rate:int = 30;
 		private var _ct:int = 0;
 		private var _level:int;
-		private var _fazhi:int = 3;
+		private var _fazhi:int = 2;
 		
 		private var _fallers:Vector.<Faller> = new Vector.<Faller>();
 		
 		private var _tBmd:BitmapData;
+		private var _progressBar:ProgressBar;
 		
 		public function ClassicMode(container:Sprite, role:Role)
 		{
 			this._tBmd = new BitmapData(70, 70, true);
 			this._container = container;
 			this._role = role;
+			this._progressBar = new ProgressBar();
+			this._progressBar.x = this._progressBar.y = 5;
 		}
 		
 		
-		private var _b:PDParticleSystem;
-		private var _g:PDParticleSystem;
-		public function setParticles(b:PDParticleSystem, g:PDParticleSystem) : void
+		public function reset() : void
 		{
-			this._b = b;
-			this._g = g;
+			this._container.parent.addChild(this._progressBar);
+			this._ct = 3600;
+			this._progressBar.setProgress(1);
 		}
 		
 		public function clean() : void
@@ -121,6 +124,7 @@ package com.kboctopus.fh.mode
 		{
 			var len:uint = this._fallers.length;
 			var f:Faller;
+			var sp:ScoreSP;
 			for (var i:int=len-1; i>=0; i--)
 			{
 				f = this._fallers[i];
@@ -130,16 +134,10 @@ package com.kboctopus.fh.mode
 					if (f.score < 0)
 					{
 						this._role.hurt(f.score);
-						this._b.emitterX = Faller.rect.x + (Faller.rect.width>>1);
-						this._b.emitterY = Faller.rect.y + (Faller.rect.height>>1);
-						this._b.start(.5);
 					}
-					else
-					{
-						this._g.emitterX = Faller.rect.x + (Faller.rect.width>>1);
-						this._g.emitterY = Faller.rect.y + (Faller.rect.height>>1);
-						this._g.start(.5);
-					}
+					sp = StaticPool.getItem(ScoreSP);
+					this._container.addChild(sp);
+					sp.show(f.score, Faller.rect.x + (Faller.rect.width>>1), Faller.rect.y + (Faller.rect.height>>1));
 					this._fallers.splice(i, 1);
 					this._container.removeChild(f);
 					StaticPool.pushItem(f);
@@ -148,13 +146,32 @@ package com.kboctopus.fh.mode
 				f.move()
 			}
 			
-			_ct++;
-			if (_ct >= 3600)
+			_ct--;
+			this._progressBar.setProgress(_ct/3600);
+			if (_ct <= 0)
 			{
-				_ct = 0;
+				_ct = 3600;
+				this._progressBar.removeFromParent();
 				return true;
 			}
 			return false;
+		}
+		
+		
+		public function checkRole() : void
+		{
+			if (this._role.x < 0)
+			{
+				this._role.x += ConstGame.GAME_W;
+			} else if (this._role.x > ConstGame.GAME_W)
+			{
+				this._role.x -= ConstGame.GAME_W;
+			}
+		}
+		
+		public function get modeName() : String
+		{
+			return "classic";
 		}
 		
 		public function set score(value:int):void
@@ -173,24 +190,6 @@ package com.kboctopus.fh.mode
 		private function set rate(value:int):void
 		{
 			_rate = value;
-		}
-
-		
-		public function get level():int
-		{
-			return _level;
-		}
-		public function set level(value:int):void
-		{
-			_level = value;
-			if (_level == ConstGame.LEVEL_NORMAL)
-			{
-				_fazhi = 2;
-			}
-			else
-			{
-				_fazhi = 3;
-			}
 		}
 
 	}

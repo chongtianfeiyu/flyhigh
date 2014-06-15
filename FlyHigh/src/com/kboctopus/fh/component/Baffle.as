@@ -5,82 +5,94 @@ package com.kboctopus.fh.component
 	
 	import flash.geom.Point;
 	
-	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.QuadBatch;
 	import starling.display.Sprite;
 	
 	public class Baffle extends Sprite
 	{
-		private var uint:QuadBatch;
+		private var unit1:QuadBatch;
+		private var unit2:QuadBatch;
 		
 		private static var qbWidth:Number = 0;
+		private static var disBetweenUnit:Number = 0;
 		private static var hasInit:Boolean = false;
-		private static var points:Array = [];
+		private static var _leftPoints:Vector.<Point> = new Vector.<Point>();
+		private static var _rightPoints:Vector.<Point> = new Vector.<Point>();
+		private static var _rightPointsBak:Vector.<Point> = new Vector.<Point>();
 		
 		public function Baffle()
 		{
 			_initUI();
 		}
 		
-		private static function initStatic(wid:Number, minW:Number) : void
+		
+		public static function setDistanceBetweenUnit(dis:Number) : void
 		{
-			hasInit = true;
-			
-			qbWidth = wid;
+			disBetweenUnit = dis;
+			var len:int = _rightPointsBak.length;
+			for (var i:int=0; i<len; i++)
+			{
+				_rightPoints[i].x = _rightPointsBak[i].x + disBetweenUnit;
+			}
+		}
+		
+		
+		private static function initStatic(minW:Number) : void
+		{
 			var point:Point = new Point(qbWidth, 8);
-			points.push(point);
+			_leftPoints.push(point);
+			_rightPoints.push(point.clone());
+			_rightPointsBak.push(point.clone());
 			point = new Point(qbWidth, 72);
-			points.push(point);
-			point = new Point(qbWidth+120, 8);
-			points.push(point);
-			point = new Point(qbWidth+120, 72);
-			points.push(point);
+			_leftPoints.push(point);
+			_rightPoints.push(point.clone());
+			_rightPointsBak.push(point.clone());
 			point = new Point(qbWidth, 40);
-			points.push(point);
-			point = new Point(qbWidth+120, 40);
-			points.push(point);
-			var num:int = wid/minW;
+			_leftPoints.push(point);
+			_rightPoints.push(point.clone());
+			_rightPointsBak.push(point.clone());
+			var num:int = qbWidth/minW;
 			var x1:Number = minW*.5;
 			point = new Point(qbWidth-x1, 80);
-			points.push(point);
-			point = new Point(qbWidth+120+x1, 80);
-			points.push(point);
+			_leftPoints.push(point);
+			point = new Point(qbWidth+x1, 80);
+			_rightPoints.push(point);
+			_rightPointsBak.push(point.clone());
 			while(num--)
 			{
 				x1 += minW;
 				point = new Point(qbWidth-x1, 80);
-				points.push(point);
-				point = new Point(qbWidth+120+x1, 80);
-				points.push(point);
+				_leftPoints.push(point);
+				point = new Point(qbWidth+x1, 80);
+				_rightPoints.push(point);
+				_rightPointsBak.push(point.clone());
 			}
 		}
 		
 		
 		private function _initUI() : void
 		{
-			uint = new QuadBatch();
+			unit1 = new QuadBatch();
 			var img:Image = new Image(AssetTool.ins().getAtlas("ui").getTexture("baffle_unit"));
-			uint.addImage(img);
-			
-			while (uint.width<ConstGame.GAME_W)
+			unit1.addImage(img);
+			while (unit1.width<ConstGame.GAME_W)
 			{
-				img.x = uint.width-1;
-				uint.addImage(img);
+				img.x = unit1.width-1;
+				unit1.addImage(img);
 			}
 			
 			if (!hasInit)
 			{
-				initStatic(uint.width, img.width-1);
+				hasInit = true;
+				qbWidth = unit1.width;
+				initStatic(img.width-1);
 			}
 			
-			var qb2:QuadBatch = new QuadBatch();
-			this.addChild(qb2);
-			uint.x = 0;
-			qb2.addQuadBatch(uint);
-			uint.x = qbWidth + 120;
-			qb2.addQuadBatch(uint);
-			
+			unit1.x = 0;
+			unit2 = unit1.clone();
+			this.addChild(unit1);
+			this.addChild(unit2);
 			this.touchable = false;
 		}
 		
@@ -89,7 +101,8 @@ package com.kboctopus.fh.component
 		public function reset() : void
 		{
 			this.y = -80;
-			this.x = -qbWidth + Math.random()*(ConstGame.GAME_W-120);
+			this.unit2.x = qbWidth + disBetweenUnit;
+			this.x = -qbWidth + Math.random()*(ConstGame.GAME_W-disBetweenUnit);
 		}
 		
 		
@@ -107,12 +120,28 @@ package com.kboctopus.fh.component
 		
 		public function hitRole(role:Role) : Boolean
 		{
-			for each(var point:Point in points)
+			var lx:Number;
+			var ly:Number;
+			var dx:Number;
+			var dy:Number;
+			for each(var point:Point in _leftPoints)
 			{
-				var lx:Number = this.x + point.x;
-				var ly:Number = this.y + point.y;
-				var dx:Number = lx - (role.x+25);
-				var dy:Number = ly - (role.y+22);
+				lx = this.x + point.x;
+				ly = this.y + point.y;
+				dx = lx - (role.x+25);
+				dy = ly - (role.y+22);
+				if (dx*dx + dy*dy < 530)
+				{
+					return true;
+				}
+			}
+			
+			for each(point in _rightPoints)
+			{
+				lx = this.x + point.x;
+				ly = this.y + point.y;
+				dx = lx - (role.x+25);
+				dy = ly - (role.y+22);
 				if (dx*dx + dy*dy < 530)
 				{
 					return true;
