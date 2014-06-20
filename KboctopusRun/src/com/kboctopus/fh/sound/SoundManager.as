@@ -9,11 +9,10 @@ package com.kboctopus.fh.sound
 	{
 		private static var _ins:SoundManager;
 		
-		private var _bgm:Sound;
-		private var _bgmChannel:SoundChannel;
-		private var _position:int;
-		
 		private var _sndDic:Dictionary = new Dictionary();
+		private var _bgmDic:Dictionary = new Dictionary();
+		private var _currentChannel:SoundChannel;
+		private var _currentBGM:Sound;
 		
 		public function SoundManager()
 		{
@@ -37,12 +36,20 @@ package com.kboctopus.fh.sound
 			_sndDic["good"] = snd;
 			
 			snd = new Sound();
-			snd.load(new URLRequest("assets/sound/over.mp3"));
-			_sndDic["over"] = snd;
+			snd.load(new URLRequest("assets/sound/bad.mp3"));
+			_sndDic["bad"] = snd;
 			
-			_bgm = new Sound();
-			_bgm.load(new URLRequest("assets/sound/bgm.mp3"));
-			_bgmChannel = _bgm.play(0, 999999);
+			snd = new Sound();
+			snd.load(new URLRequest("assets/sound/bg.mp3"));
+			_bgmDic["bg"] = snd;
+			
+			snd = new Sound();
+			snd.load(new URLRequest("assets/sound/go.mp3"));
+			_bgmDic["go"] = snd;
+			
+			snd = new Sound();
+			snd.load(new URLRequest("assets/sound/classic.mp3"));
+			_bgmDic["classic"] = snd;
 		}
 		
 		
@@ -52,15 +59,30 @@ package com.kboctopus.fh.sound
 		}
 		
 		
+		public function playBGM(name:String) : void
+		{
+			if (_currentChannel != null)
+			{
+				stop();
+			}
+			_currentBGM = _bgmDic[name];
+			_currentChannel = _currentBGM.play(0, 999999);
+		}
+		
+		public function stop() : void
+		{
+			_currentChannel.stop();
+			_currentChannel = null;
+		}
+		
 		public function pause():void
 		{
-			_position = _bgmChannel.position;
-			_bgmChannel.stop();
+			_currentChannel.stop();
 		}
 		
 		public function resume():void
 		{
-			_bgmChannel = _bgm.play(_position, 999999);
+			_currentChannel = _currentBGM.play(0, 999999);
 		}
 	}
 }

@@ -10,6 +10,7 @@ package com.kboctopus.fh.screen
 	import com.kboctopus.fh.mode.EasyMode;
 	import com.kboctopus.fh.mode.HardMode;
 	import com.kboctopus.fh.mode.IPlayMode;
+	import com.kboctopus.fh.sound.SoundManager;
 	import com.kboctopus.fh.tools.AssetTool;
 	import com.kboctopus.fh.tools.StaticPool;
 	import com.kboctopus.steer.geom.Vector2D;
@@ -46,6 +47,7 @@ package com.kboctopus.fh.screen
 		override public function destroy():void
 		{
 			super.destroy();
+			SoundManager.ins().stop();
 		}
 		
 		override public function reset(data:*):void
@@ -55,14 +57,17 @@ package com.kboctopus.fh.screen
 			if (data=="easy")
 			{
 				this._mode = this._easy;
+				SoundManager.ins().playBGM("go");
 			}
 			else if (data=="classic")
 			{
 				this._mode = this._classic;
+				SoundManager.ins().playBGM("classic");
 			}
 			else
 			{
 				this._mode = this._hard;
+				SoundManager.ins().playBGM("go");
 			}
 			this._mode.reset();
 			this._mode.score = 0;

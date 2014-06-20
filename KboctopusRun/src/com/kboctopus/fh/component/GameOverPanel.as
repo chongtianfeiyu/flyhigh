@@ -32,6 +32,7 @@ package com.kboctopus.fh.component
 		
 		public function setResult(mode:IPlayMode) : void
 		{
+			mode.checkPutToBoard();
 			switch(mode.modeName)
 			{
 				case "classic":
@@ -80,10 +81,9 @@ package com.kboctopus.fh.component
 			this._scoreTF.touchable = this._bestTF.touchable = false;
 			
 			// init btn
-			this._billboardBtn = new MyButton("btn_billboard", _clickReturnHandler);
+			this._billboardBtn = new MyButton("btn_billboard", _clickBBHandler);
 			this.addChild(this._billboardBtn);
-			this._billboardBtn.touchable = false;
-			this._returnBtn = new MyButton("btn_return", _clickAgainHandler);
+			this._returnBtn = new MyButton("btn_return", _clickReturnHandler);
 			this.addChild(this._returnBtn);
 			this._billboardBtn.y = this._returnBtn.y = 300;
 			this._billboardBtn.x = 54;
@@ -91,16 +91,16 @@ package com.kboctopus.fh.component
 		}
 		
 		
+		public var bbHandler:Function;
 		public var returnHandler:Function;
-		public var againHandler:Function;
+		private function _clickBBHandler(btn:MyButton) : void
+		{
+			bbHandler();
+		}
+		
 		private function _clickReturnHandler(btn:MyButton) : void
 		{
 			returnHandler();
-		}
-		
-		private function _clickAgainHandler(btn:MyButton) : void
-		{
-			againHandler();
 		}
 
 		public function set clickAble(value:Boolean):void
@@ -110,7 +110,7 @@ package com.kboctopus.fh.component
 				return;
 			}
 			_clickAble = value;
-			this._returnBtn.clickAble = _clickAble;
+			this._returnBtn.clickAble = this._billboardBtn.clickAble = _clickAble;
 		}
 
 	}

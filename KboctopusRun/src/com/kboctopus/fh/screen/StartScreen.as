@@ -3,6 +3,7 @@ package com.kboctopus.fh.screen
 	import com.kboctopus.fh.component.MyButton;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
+	import com.kboctopus.fh.sound.SoundManager;
 	import com.kboctopus.fh.tools.AssetTool;
 	
 	import flash.display.BitmapData;
@@ -37,12 +38,14 @@ package com.kboctopus.fh.screen
 		{
 			super.destroy();
 			this._classicBtn.clickAble = this._easyBtn.clickAble = this._hardBtn.clickAble = false;
+			SoundManager.ins().stop();
 		}
 		
 		override public function reset(data:*):void
 		{
 			super.reset(data);
 			this._classicBtn.clickAble = this._easyBtn.clickAble = this._hardBtn.clickAble = true;
+			SoundManager.ins().playBGM("bg");
 		}
 		
 		

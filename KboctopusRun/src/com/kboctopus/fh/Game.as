@@ -1,5 +1,6 @@
 package com.kboctopus.fh
 {
+	import com.gamua.flox.Flox;
 	import com.kboctopus.fh.component.FirstTip;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.consts.ConstScreen;
@@ -10,6 +11,8 @@ package com.kboctopus.fh
 	import com.kboctopus.fh.screen.StartScreen;
 	import com.kboctopus.fh.tools.AssetTool;
 	import com.kboctopus.fh.tools.LocalSaver;
+	import com.kboctopus.sns.ServiceManager;
+	import com.kboctopus.sns.constant.ServiceType;
 	
 	import flash.utils.Dictionary;
 	
@@ -59,13 +62,18 @@ package com.kboctopus.fh
 			this.addChild(screen);
 			this._screenDic[ConstScreen.ID_GAME_OVER] = screen;
 			
+			
+			// init banner
 			AdManager.getInstance().enableTrace = false;
 			var list:Vector.<AdItem>=new Vector.<AdItem>();
 			list.push(new AdItem(new AdmobAdapter(), 10, SYS.admobBannerID,"",5));
 //			list.push(new AdItem(new BaiduAdapter(), 10,SYS.baiduID,SYS.baiduID,5));
-			
 			AdManager.getInstance().configPlatforms(list);
-//			AdManager.getInstance().showInterstitialOrCache();
+			
+			// sns init
+			ServiceManager.ins().initConfig(ServiceType.SINA, "", SYS.sinaID, SYS.sinaKey, SYS.sinaCallback);
+			ServiceManager.ins().initConfig(ServiceType.TENCENT, "", SYS.tencentID, SYS.tencentKey, SYS.tencentCallback);
+			Flox.init(SYS.floxID, SYS.floxKey);
 		}
 		
 		

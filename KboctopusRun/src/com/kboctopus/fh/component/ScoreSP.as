@@ -25,12 +25,12 @@ package com.kboctopus.fh.component
 		{
 			if (v<0)
 			{
-				this._tf.color = 0xffff0000;
+				this._tf.color = 0xff000000;
 				this._tf.text = v.toString();
 			}
 			else
 			{
-				this._tf.color = 0xff00ff00;
+				this._tf.color = 0xff777777;
 				this._tf.text = "+" + v.toString();
 			}
 			this.scaleX = this.scaleY = 1;
@@ -42,9 +42,9 @@ package com.kboctopus.fh.component
 			var sp:ScoreSP = this;
 			Starling.juggler.tween(this, 1, {
 				transition: Transitions.EASE_IN_OUT,
-				alpha: .2,
-				scaleX: .4,
-				scaleY: .4,
+				alpha: .1,
+				scaleX: .7,
+				scaleY: .7,
 				onComplete: function() : void
 				{
 					sp.visible = false;

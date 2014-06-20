@@ -1,11 +1,14 @@
 package com.kboctopus.fh.mode
 {
+	import com.gamua.flox.Flox;
+	import com.gamua.flox.TimeScope;
 	import com.kboctopus.fh.component.ProgressBar;
 	import com.kboctopus.fh.component.Role;
 	import com.kboctopus.fh.component.ScoreSP;
 	import com.kboctopus.fh.component.faller.*;
 	import com.kboctopus.fh.consts.ConstGame;
 	import com.kboctopus.fh.sound.SoundManager;
+	import com.kboctopus.fh.tools.NativeTool;
 	import com.kboctopus.fh.tools.StaticPool;
 	
 	import flash.display.BitmapData;
@@ -26,6 +29,8 @@ package com.kboctopus.fh.mode
 		
 		private var _tBmd:BitmapData;
 		private var _progressBar:ProgressBar;
+		
+		private var _leaderboards:Array;
 		
 		public function ClassicMode(container:Sprite, role:Role)
 		{
@@ -121,6 +126,44 @@ package com.kboctopus.fh.mode
 		}
 		
 		
+		public function checkPutToBoard(callback:Function):void
+		{
+			if (this._leaderboards == null)
+			{
+				this._leaderboards = [];
+				Flox.postScore(this.modeName, this.score, "p");
+				Flox.loadScores(this.modeName, TimeScope.THIS_WEEK, 
+					function onComplete(scores:Array):void {
+						_leaderboards.length = 0;
+						_leaderboards = scores;
+					},
+					function onError(error:String):void {
+					}
+				);
+			}
+			else
+			{
+				var len:int = this._leaderboards.length;
+				var index:int;
+				if (len > 10)
+				{
+					index = 10;
+				} 
+				else
+				{
+					index = len-1;
+				}
+				for (var i:int=0; i<= index; i++)
+				{
+					if (this._leaderboards[i].value<this.score)
+					{
+						Flox.postScore(this.modeName, this.score, "p");
+					}
+				}
+			}
+		}
+		
+		
 		public function checkOver() : Boolean
 		{
 			var len:uint = this._fallers.length;
@@ -135,6 +178,7 @@ package com.kboctopus.fh.mode
 					if (f.score < 0)
 					{
 						this._role.hurt(f.score);
+						SoundManager.ins().getSound("bad").play();
 					}
 					else
 					{
@@ -196,6 +240,12 @@ package com.kboctopus.fh.mode
 		{
 			_rate = value;
 		}
-
+		
+		
+		public function get leaderboards() : Array
+		{
+			return _leaderboards;
+		}
+		
 	}
 }

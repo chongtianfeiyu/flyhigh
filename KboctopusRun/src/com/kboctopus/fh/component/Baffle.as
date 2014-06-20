@@ -114,7 +114,7 @@ package com.kboctopus.fh.component
 		
 		public function out() : Boolean
 		{
-			return (this.y>=ConstGame.GAME_H);
+			return (this.y>=ConstGame.GAME_H-160);
 		}
 		
 		

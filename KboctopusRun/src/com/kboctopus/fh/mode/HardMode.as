@@ -1,5 +1,7 @@
 package com.kboctopus.fh.mode
 {
+	import com.gamua.flox.Flox;
+	import com.gamua.flox.TimeScope;
 	import com.kboctopus.fh.component.Baffle;
 	import com.kboctopus.fh.component.Role;
 	import com.kboctopus.fh.consts.ConstGame;
@@ -18,11 +20,24 @@ package com.kboctopus.fh.mode
 		private var _role:Role;
 		private var _score:int;
 		
+		protected var _leaderboards:Array;
+		protected var _canBePutBoard:Boolean = true;
+		
 		public function HardMode(container:Sprite, role:Role)
 		{
 			this._container = container;
 			this._role = role;
 			this._rate = ConstGame.GAME_W*100/480;
+			
+			Flox.loadScores(this.modeName, TimeScope.THIS_WEEK, 
+				function onComplete(scores:Array):void {
+					_leaderboards = scores;
+					_canBePutBoard = true;
+				},
+				function onError(error:String):void {
+					_canBePutBoard = false;
+				}
+			);
 		}
 		
 		
@@ -59,6 +74,37 @@ package com.kboctopus.fh.mode
 			baffle.reset();
 			this._container.addChild(baffle);
 			this._showBaffle.push(baffle);
+		}
+		
+		
+		public function checkPutToBoard():void
+		{
+			if (!this._canBePutBoard)
+			{
+				return;
+			}
+			if (this._leaderboards == null)
+			{
+				this._leaderboards = [];
+				Flox.postScore(this.modeName, this.score, "p");
+			}
+			else
+			{
+				var len:int = this._leaderboards.length;
+				var index:int;
+				if (len > 10)
+				{
+					index = 10;
+				} 
+				else
+				{
+					index = len-1;
+				}
+				if (this._leaderboards[index]<this.score)
+				{
+					Flox.postScore(this.modeName, this.score, "p");
+				}
+			}
 		}
 		
 		
@@ -114,6 +160,15 @@ package com.kboctopus.fh.mode
 		private function set rate(value:int):void
 		{
 			_rate = value;
+		}
+		
+		public function get leaderboards() : Array
+		{
+			return _leaderboards;
+		}
+		public function get canBePutBoard():Boolean
+		{
+			return _canBePutBoard;
 		}
 	}
 }
